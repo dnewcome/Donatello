@@ -33,27 +33,27 @@ Donatello.paper = function( id, x, y, z, w, h ) {
  * Detect css transform attribute
  */
 Donatello.setTransform = function() {
-			var transform;
-			// css spec, no browser supports this yet
-			if( typeof document.body.style.transform != 'undefined' ) {
-				transform = 'transform';
-			} 
-			else if( typeof document.body.style.webkitTransform != 'undefined' ) {
-				transform = 'webkitTransform';
-			} 
-			else if( typeof document.body.style.MozTransform != 'undefined' ) {
-				transform = 'MozTransform';
-			} 
-			else if( typeof document.body.style.msTransform != 'undefined' ) {
-				transform = 'msTransform';
-			} 
-			else if( typeof document.body.style.OTransform != 'undefined' ) {
-				transform = 'OTransform';
-			} 
-			// transforms not supported
-			else { transform = null }
-			console.log( 'css transform: ' + transform );
-			Donatello.transform = transform;
+		var transform;
+		// css spec, no browser supports this yet
+		if( typeof document.body.style.transform != 'undefined' ) {
+			transform = 'transform';
+		} 
+		else if( typeof document.body.style.webkitTransform != 'undefined' ) {
+			transform = 'webkitTransform';
+		} 
+		else if( typeof document.body.style.MozTransform != 'undefined' ) {
+			transform = 'MozTransform';
+		} 
+		else if( typeof document.body.style.msTransform != 'undefined' ) {
+			transform = 'msTransform';
+		} 
+		else if( typeof document.body.style.OTransform != 'undefined' ) {
+			transform = 'OTransform';
+		} 
+		// transforms not supported
+		else { transform = null }
+		console.log( 'css transform: ' + transform );
+		Donatello.transform = transform;
 }
 
 Donatello.prototype.rotate = function( deg ) {
@@ -73,6 +73,30 @@ Donatello.prototype.circle = function( x, y, r ) {
 	el.style.borderRadius = r + 'px';
 	el.style.border = '1px solid black';
 	this.dom.appendChild( el );
+}
+
+/**
+ * Arc works by drawing a circle and a rectangular clipping 
+ * region. The arc length determines the skew and position of 
+ * the clipping region.
+ */
+Donatello.prototype.arc = function( x, y, r ) {
+	// clipping region
+	var clipEl = Donatello.createElement( x-r, y-r, 2*r, 2*r, 'div');
+	// clipEl.style.border = '1px solid black';
+	clipEl.style.overflow = 'hidden';
+	clipEl.style[ Donatello.transform ]= 'skew(30deg)rotate(15deg)';
+	this.dom.appendChild( clipEl );
+
+	// circular drawing region 
+	var el = Donatello.createElement( -r, -r, 2*r, 2*r, 'div');
+	el.style.borderRadius = r + 'px';
+	el.style.border = '3px solid black';
+	// need to compensate for transforms made by clipping region 
+	el.style[ Donatello.transform ]= 'skew(-30deg)';
+	
+	// visible drawing region is a child of the clipping region 
+	clipEl.appendChild( el );
 }
 
 /* TODO: fill and stroke may not always be border/background color */
