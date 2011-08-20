@@ -25,9 +25,8 @@ function Donatello( id, x, y, w, h ) {
 *  The idea is to construct a container that
 *  has no visible properties by default.
 */
-Donatello.paper = function() {
-	// return a new Donatello instance
-	// with no visible properties
+Donatello.paper = function( id, x, y, z, w, h ) {
+	return new Donatello( id, x, y, z, w, h );
 }
 
 /**
@@ -61,18 +60,18 @@ Donatello.prototype.rotate = function( deg ) {
 	this.dom.style[ Donatello.transform ] = 'rotate(' + deg + 'deg)';
 }
 
+Donatello.prototype.clear = function() {
+	while( this.dom.hasChildNodes() ) {
+		this.dom.removeChild( this.dom.lastChild );
+	}
+}
+
 /**
  */
 Donatello.prototype.circle = function( x, y, r ) {
-	var el = document.createElement( 'div' );	
-	el.style.position = 'absolute';
-	el.style.top = y - r + 'px';
-	el.style.left = x - r + 'px';
-	el.style.width = 2*r + 'px';
-	el.style.height = 2*r + 'px';
+	var el = Donatello.createElement( x-r, y-r, 2*r, 2*r, 'div');
 	el.style.borderRadius = r + 'px';
 	el.style.border = '1px solid black';
-	
 	this.dom.appendChild( el );
 }
 
@@ -91,12 +90,7 @@ Donatello.prototype.setStrokeWidth = function( width ) {
  * Ellipse is similar to circle, should consolidate
  */
 Donatello.prototype.ellipse = function( x, y, r1, r2 ) {
-	var el = document.createElement( 'div' );	
-	el.style.position = 'absolute';
-	el.style.top = y + 'px';
-	el.style.left = x + 'px';
-	el.style.width = r1 + 'px';
-	el.style.height = r2 + 'px';
+	var el = Donatello.createElement( x, y, r1, r2, 'div');
 	el.style.borderRadius = r1 / 2  + 'px / ' + r2 / 2  + 'px';
 	el.style.border = '1px solid black';
 	
@@ -104,15 +98,9 @@ Donatello.prototype.ellipse = function( x, y, r1, r2 ) {
 	return new Donatello( el );
 }
 
-Donatello.prototype.rect = function( x, y, dx, dy ) {
-	var el = document.createElement( 'div' );	
-	el.style.position = 'absolute';
-	el.style.top = y + 'px';
-	el.style.left = x + 'px';
-	el.style.width = dx + 'px';
-	el.style.height = dy + 'px';
+Donatello.prototype.rect = function( x, y, w, h ) {
+	var el = Donatello.createElement( x, y, w, h, 'div');
 	el.style.border = '1px solid black';
-	
 	this.dom.appendChild( el );
 	return new Donatello( el );
 }
@@ -122,12 +110,7 @@ Donatello.prototype.rect = function( x, y, dx, dy ) {
  * should consolidate the methods.
  */
 Donatello.prototype.pgram = function( x, y, dx, dy, a ) {
-	var el = document.createElement( 'div' );	
-	el.style.position = 'absolute';
-	el.style.top = y + 'px';
-	el.style.left = x + 'px';
-	el.style.width = dx + 'px';
-	el.style.height = dy + 'px';
+	var el = Donatello.createElement( x, y, dx, dy, 'div');
 	el.style.border = '1px solid black';
 	el.style[ Donatello.transform ]= 'skew(' + a + 'deg)';
 	this.dom.appendChild( el );
@@ -137,11 +120,8 @@ Donatello.prototype.pgram = function( x, y, dx, dy, a ) {
 /**
  */
 Donatello.prototype.text = function( x, y, str ) {
-	var el = document.createElement( 'div' );	
+	var el = Donatello.createElement( x, y, null, null, 'div');
 	el.innerHTML = str;
-	el.style.position = 'absolute';
-	el.style.top = y + 'px';
-	el.style.left = x + 'px';
 	this.dom.appendChild( el );
 	return new Donatello( el );
 }
@@ -149,13 +129,8 @@ Donatello.prototype.text = function( x, y, str ) {
 /**
  */
 Donatello.prototype.image = function( x, y, w, h, img ) {
-	var el = document.createElement( 'img' );	
+	var el = Donatello.createElement( x, y, w, h, 'img');
 	el.src = img;
-	el.style.position = 'absolute';
-	el.style.top = y + 'px';
-	el.style.left = x + 'px';
-	el.style.width = w + 'px';
-	el.style.height = h + 'px';
 	this.dom.appendChild( el );
 	return new Donatello( el );
 }
@@ -171,6 +146,87 @@ Donatello.prototype.attr = function( obj ) {
 		this.dom.style[attr] = obj[attr];
 	}
 	return this.dom;
+}
+
+/**
+* Convenience constructor for creating
+* and initializing DOM elements.
+*/
+Donatello.createElement = function( x, y, w, h, name ) {
+	var el = document.createElement( name );
+	el.style.position = 'absolute';
+	el.style.top = y + 'px';
+	el.style.left = x + 'px';
+	el.style.width = w + 'px';
+	el.style.height = h + 'px';
+	return el;
+}
+
+/**
+* path creates an html canvas element
+* and translates svg commands to canvas
+* drawing commands.
+*
+* TODO: parameterize stroke width/style
+* and save command array to redraw on changes
+* currently path is drawn once and cannot be
+* altered later.
+*/
+Donatello.prototype.path = function( x, y, w, h, path ) {
+	var canvas = Donatello.createElement( x, y, w, h, 'canvas' );
+	// set coordinate w/h in addition to element css
+	canvas.width = w;
+	canvas.height = h;
+
+    var context = canvas.getContext("2d");
+ 
+	var lastx = 0, lasty = 0;
+    context.beginPath();
+	for( var i=0; i < path.length; i++ ) {
+		if( path[i][0] == "M" ) {
+			context.moveTo( path[i][1], path[i][2] );
+			lastx = path[i][1];
+			lasty = path[i][2];
+		}
+		// note relative path commands haven't been tested
+		else if( path[i][0] == "m" ) {
+			context.moveTo( lastx + path[i][1], lasty + path[i][2] );
+			lastx += path[i][1];
+			lasty += path[i][2];
+		}
+		else if( path[i][0] == "L" ) {
+			context.lineTo( path[i][1], path[i][2] );
+			lastx = path[i][1];
+			lasty = path[i][2];
+		}
+		// note relative path commands haven't been tested
+		else if( path[i][0] == "l" ) {
+			context.lineTo( lastx + path[i][1], lasty + path[i][2] );
+			lastx += path[i][1];
+			lasty += path[i][2];
+		}
+		else if( path[i][0] == "Q" ) {
+			context.quadraticCurveTo( 
+				path[i][1], path[i][2],path[i][3], path[i][4]  
+			);
+			lastx = path[i][3];
+			lasty = path[i][4];
+		}
+		else if( path[i][0] == "C" ) {
+			context.bezierCurveTo( 
+				path[i][1], path[i][2],path[i][3], path[i][4], path[i][5], path[i][6] 
+			);
+			lastx = path[i][5];
+			lasty = path[i][6];
+		}
+	}
+	
+    context.lineWidth = 5;
+    context.strokeStyle = "#0000ff";
+    context.stroke();
+
+	this.dom.appendChild( canvas );
+	return new Donatello( canvas );
 }
 
 /**
