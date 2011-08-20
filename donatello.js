@@ -1,6 +1,12 @@
-// arc, polygon, clip, group
-// path (canvas?), clear, bezier
+// polygon, clip, group
+// bezier
+// boundingBox/clickarea/toucharea
 
+/**
+ * Construct a toplevel drawing surface. This is no
+ * different than any other Donatello node, but it has
+ * no visible properties.
+ */
 function Donatello( id, x, y, w, h ) {
 	// TODO fix hacky initialization
 	Donatello.setTransform();
@@ -21,9 +27,7 @@ function Donatello( id, x, y, w, h ) {
 }
 
 /*
-*  todo; plane, canvas, paper
-*  The idea is to construct a container that
-*  has no visible properties by default.
+*  todo; thinking about renaming this to plane 
 */
 Donatello.paper = function( id, x, y, z, w, h ) {
 	return new Donatello( id, x, y, z, w, h );
@@ -31,8 +35,11 @@ Donatello.paper = function( id, x, y, z, w, h ) {
 
 /**
  * Detect css transform attribute
+ * Must be called after DOM is loaded since we detect
+ * features by looking at DOM properties.
  */
 Donatello.setTransform = function() {
+	if( Donatello.transform == undefined ) {
 		var transform;
 		// css spec, no browser supports this yet
 		if( typeof document.body.style.transform != 'undefined' ) {
@@ -54,6 +61,7 @@ Donatello.setTransform = function() {
 		else { transform = null }
 		console.log( 'css transform: ' + transform );
 		Donatello.transform = transform;
+	}
 }
 
 Donatello.prototype.rotate = function( deg ) {
@@ -67,18 +75,37 @@ Donatello.prototype.clear = function() {
 }
 
 /**
+ * Draw a circle
  */
 Donatello.prototype.circle = function( x, y, r ) {
 	var el = Donatello.createElement( x-r, y-r, 2*r, 2*r, 'div');
 	el.style.borderRadius = r + 'px';
 	el.style.border = '1px solid black';
 	this.dom.appendChild( el );
+	return new Donatello( el );
+}
+
+/**
+ * Ellipse is similar to circle, should consolidate
+ */
+Donatello.prototype.ellipse = function( x, y, r1, r2 ) {
+	var el = Donatello.createElement( x, y, r1, r2, 'div');
+	el.style.borderRadius = r1 / 2  + 'px / ' + r2 / 2  + 'px';
+	el.style.border = '1px solid black';
+	
+	this.dom.appendChild( el );
+	return new Donatello( el );
 }
 
 /**
  * Arc works by drawing a circle and a rectangular clipping 
  * region. The arc length determines the skew and position of 
  * the clipping region.
+ *
+ * for arcs > 180deg I think we'll have to use 2 arc regions.
+ * Not sure how we would get the proper clipping window for 
+ * a single circle to work. Maybe border-clip would work
+ * somehow.
  */
 Donatello.prototype.arc = function( x, y, r ) {
 	// clipping region
@@ -110,33 +137,20 @@ Donatello.prototype.setStrokeWidth = function( width ) {
 	this.dom.style.borderWidth = width + 'px';
 }
 
-/**
- * Ellipse is similar to circle, should consolidate
- */
-Donatello.prototype.ellipse = function( x, y, r1, r2 ) {
-	var el = Donatello.createElement( x, y, r1, r2, 'div');
-	el.style.borderRadius = r1 / 2  + 'px / ' + r2 / 2  + 'px';
-	el.style.border = '1px solid black';
-	
-	this.dom.appendChild( el );
-	return new Donatello( el );
-}
 
 Donatello.prototype.rect = function( x, y, w, h ) {
-	var el = Donatello.createElement( x, y, w, h, 'div');
-	el.style.border = '1px solid black';
-	this.dom.appendChild( el );
-	return new Donatello( el );
+	return this.pgram( x, y, w, h, null );
 }
 
 /**
- * Parallelogram - same as rect except for skew angle
- * should consolidate the methods.
+ * generalized parallelogram
  */
 Donatello.prototype.pgram = function( x, y, dx, dy, a ) {
 	var el = Donatello.createElement( x, y, dx, dy, 'div');
 	el.style.border = '1px solid black';
-	el.style[ Donatello.transform ]= 'skew(' + a + 'deg)';
+	if( a != null ) {
+		el.style[ Donatello.transform ]= 'skew(' + a + 'deg)';
+	}
 	this.dom.appendChild( el );
 	return new Donatello( el );
 }
@@ -175,9 +189,16 @@ Donatello.prototype.attr = function( obj ) {
 /**
 * Convenience constructor for creating
 * and initializing DOM elements.
+* name is either tag name of a dom element
 */
 Donatello.createElement = function( x, y, w, h, name ) {
-	var el = document.createElement( name );
+	var el;
+	if( typeof name == 'string' ) {
+		el = document.createElement( name );
+	}
+	else {
+		el = name;
+	}
 	el.style.position = 'absolute';
 	el.style.top = y + 'px';
 	el.style.left = x + 'px';
