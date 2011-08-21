@@ -112,11 +112,15 @@ Donatello.prototype.ellipse = function( x, y, rx, ry ) {
  * Not sure how we would get the proper clipping window for 
  * a single circle to work. Maybe border-clip would work
  * somehow.
+ *
+ * TODO: arc is broken for wide stroke widths. Need to compensate
+ * for this in borderRadius. Also should be re-using circle
+ * code for this instead of replicating it here. 
  */
 Donatello.prototype.arc = function( x, y, r ) {
 	// clipping region
 	var clipEl = Donatello.createElement( x-r, y-r, 2*r, 2*r, 'div');
-	// clipEl.style.border = '1px solid black';
+	clipEl.style.border = '1px solid black';
 	clipEl.style.overflow = 'hidden';
 	clipEl.style[ Donatello.transform ]= 'skew(30deg)rotate(15deg)';
 	this.dom.appendChild( clipEl );
@@ -130,6 +134,7 @@ Donatello.prototype.arc = function( x, y, r ) {
 	
 	// visible drawing region is a child of the clipping region 
 	clipEl.appendChild( el );
+	return new Donatello( el );
 }
 
 /* TODO: fill and stroke may not always be border/background color */
@@ -292,6 +297,8 @@ Donatello.prototype.path = function( x, y, w, h, path ) {
 *
 * TODO: add end caps - box-radius for rounded,
 * borders for diagonal. also maybe linejoin
+* 
+* Need better compensation for wide strokes
 */
 Donatello.prototype.line = function( x, y, dx, dy, w ) {
 	var stroke = w || 1;
