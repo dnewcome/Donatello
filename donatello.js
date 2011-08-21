@@ -1,15 +1,19 @@
 /**
 * Donatello - A pure CSS drawing library.
+*
+* Provided under the MIT license.
+* See LICENSE file for full text of the license.
+* Copyright 2010 Dan Newcome.
 */
 
-// polygon, clip, group
-// bezier
-// boundingBox/clickarea/toucharea
 
 /**
- * Construct a toplevel drawing surface. This is no
- * different than any other Donatello node, but it has
- * no visible properties.
+ * Donatello objects are used to represent shapes drawn
+ * in the scene. The scene consists of a tree of these.
+ *
+ * id - id string of an existing DOM element or a reference
+ * to the DOM element itself.
+ * x/y, w/h - position and size
  */
 function Donatello( id, x, y, w, h ) {
 	// TODO fix hacky initialization
@@ -31,6 +35,9 @@ function Donatello( id, x, y, w, h ) {
 }
 
 /*
+* Paper is a Donatello object that serves as a container 
+* and has no visible attributes. Essentially a factory
+* method wrapping Donatello constructor for now.
 *  todo; thinking about renaming this to plane 
 */
 Donatello.paper = function( id, x, y, z, w, h ) {
@@ -38,7 +45,7 @@ Donatello.paper = function( id, x, y, z, w, h ) {
 }
 
 /**
- * Detect css transform attribute
+ * Detect css transform attribute for browser compatibility.
  * Must be called after DOM is loaded since we detect
  * features by looking at DOM properties.
  */
@@ -68,6 +75,11 @@ Donatello.setTransform = function() {
 	}
 }
 
+
+/**
+ * Transformation methods that apply to all shapes
+ */
+
 Donatello.prototype.rotate = function( deg ) {
 	this.dom.style[ Donatello.transform ] = 'rotate(' + deg + 'deg)';
 }
@@ -77,6 +89,22 @@ Donatello.prototype.clear = function() {
 		this.dom.removeChild( this.dom.lastChild );
 	}
 }
+
+Donatello.prototype.node = function() {
+	return this.dom;
+}
+
+Donatello.prototype.attr = function( obj ) {
+	for( attr in obj ) {
+		this.dom.style[attr] = obj[attr];
+	}
+	return this.dom;
+}
+
+
+/**
+* Drawing methods
+*/
 
 /**
  * Draw a circle
@@ -114,13 +142,15 @@ Donatello.prototype.ellipse = function( x, y, rx, ry, s ) {
 
 
 
-
+/**
+*  Draw a rectangular region to the scene.
+*/
 Donatello.prototype.rect = function( x, y, w, h ) {
 	return this.pgram( x, y, w, h, null );
 }
 
 /**
- * generalized parallelogram
+ * generalized parallelogram, used by rect.
  */
 Donatello.prototype.pgram = function( x, y, dx, dy, a ) {
 	var el = Donatello.createElement( x, y, dx, dy, 'div');
@@ -133,7 +163,8 @@ Donatello.prototype.pgram = function( x, y, dx, dy, a ) {
 }
 
 /**
- */
+* Draw text to the scene using a <div> tag.
+*/
 Donatello.prototype.text = function( x, y, str ) {
 	var el = Donatello.createElement( x, y, null, null, 'div');
 	el.innerHTML = str;
@@ -142,46 +173,13 @@ Donatello.prototype.text = function( x, y, str ) {
 }
 
 /**
- */
+* Draw an image to the scene using an <img> tag.
+*/
 Donatello.prototype.image = function( x, y, w, h, img ) {
 	var el = Donatello.createElement( x, y, w, h, 'img');
 	el.src = img;
 	this.dom.appendChild( el );
 	return new Donatello( el );
-}
-
-// like raphael, get underlying dom node
-Donatello.prototype.node = function() {
-	return this.dom;
-}
-
-// like raphael, set attributes 
-Donatello.prototype.attr = function( obj ) {
-	for( attr in obj ) {
-		this.dom.style[attr] = obj[attr];
-	}
-	return this.dom;
-}
-
-/**
-* Convenience constructor for creating
-* and initializing DOM elements.
-* name is either tag name of a dom element
-*/
-Donatello.createElement = function( x, y, w, h, name ) {
-	var el;
-	if( typeof name == 'string' ) {
-		el = document.createElement( name );
-	}
-	else {
-		el = name;
-	}
-	el.style.position = 'absolute';
-	el.style.top = y + 'px';
-	el.style.left = x + 'px';
-	el.style.width = w + 'px';
-	el.style.height = h + 'px';
-	return el;
 }
 
 /**
@@ -238,4 +236,25 @@ Donatello.prototype.line = function( x, y, dx, dy, w ) {
 	el.style[ Donatello.transform + 'Origin' ] = '0px ' + stroke/2 + 'px';
 	this.dom.appendChild( el );
 	return new Donatello( el );
+}
+
+/**
+* Internally used  method for creating
+* and initializing DOM elements.
+* name is either tag name of a dom element
+*/
+Donatello.createElement = function( x, y, w, h, name ) {
+	var el;
+	if( typeof name == 'string' ) {
+		el = document.createElement( name );
+	}
+	else {
+		el = name;
+	}
+	el.style.position = 'absolute';
+	el.style.top = y + 'px';
+	el.style.left = x + 'px';
+	el.style.width = w + 'px';
+	el.style.height = h + 'px';
+	return el;
 }
