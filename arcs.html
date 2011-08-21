@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+	<script src="donatello.js" type="text/javascript"></script>
+	<script>
+		function main() {
+			var paper = Donatello.paper('paper-div', 20, 20, 300, 300 );
+			
+			// var circle = paper.arc( 60, 60, 100, 100 );
+			var circle2 = paper.arc( 60, 60, 30, 30,20 );
+			var arc3= paper.arc( 160, 60, 30, 30,92 );
+			// var circle3 = paper.arc( 60, 60, 10, 10 );
+			circle.setStrokeWidth( 50 );
+			circle.setStroke( 'brown' );
+			circle2.setStrokeWidth( 20 );
+			circle2.setStroke( 'green' );
+			circle3.setStrokeWidth( 2 );
+			circle3.setStroke( 'red' );
+			// var arc = paper.arc( 250, 20, 20 );
+		}
+	</script>
+	<style>
+		#paper-div {
+			border: 1px solid black
+		}
+	</style>
+
+</head>
+<body onload='main();'>
+	<div id="paper-div">
+	</div>
+</body>
+</html>
