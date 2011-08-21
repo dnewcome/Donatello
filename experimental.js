@@ -1,16 +1,18 @@
 /**
+* Experimental extensions to Donatello. Includes attempt
+* at arc and path. Path is a slight cheat since it uses 
+* HTML canvas and is not purely CSS. It's possible that
+* once we have richer primitives like bezier curves we'll
+* be able to do this all in CSS.
+*/
+
+/**
  * Arc works by drawing a circle and a rectangular clipping 
  * region. The arc length determines the skew and position of 
  * the clipping region.
  *
- * for arcs > 180deg I think we'll have to use 2 arc regions.
- * Not sure how we would get the proper clipping window for 
- * a single circle to work. Maybe border-clip would work
- * somehow.
+ * for arcs > 90deg we'll have to use more arc regions.
  *
- * TODO: arc is broken for wide stroke widths. Need to compensate
- * for this in borderRadius. Also should be re-using circle
- * code for this instead of replicating it here. 
  */
 Donatello.prototype.arc = function( x, y, r, s, deg ) {
 	// clipping region

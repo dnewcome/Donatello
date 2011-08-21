@@ -1,3 +1,7 @@
+/**
+* Donatello - A pure CSS drawing library.
+*/
+
 // polygon, clip, group
 // bezier
 // boundingBox/clickarea/toucharea
@@ -12,14 +16,14 @@ function Donatello( id, x, y, w, h ) {
 	Donatello.setTransform();
 
 	if( typeof id == 'string' ) {
-	var el = document.getElementById( id );
-	el.style.position = 'relative';
-	el.style.top = x + 'px';
-	el.style.left = y + 'px';
-	el.style.width = w + 'px';
-	el.style.height = h + 'px';
-	
-	this.dom = el;
+		var el = document.getElementById( id );
+		el.style.position = 'relative';
+		el.style.top = x + 'px';
+		el.style.left = y + 'px';
+		el.style.width = w + 'px';
+		el.style.height = h + 'px';
+		
+		this.dom = el;
 	}
 	else {
 		this.dom = id;
