@@ -79,7 +79,10 @@ Donatello.prototype.clear = function() {
  */
 Donatello.prototype.circle = function( x, y, r ) {
 	var el = Donatello.createElement( x-r, y-r, 2*r, 2*r, 'div');
-	el.style.borderRadius = r + 'px';
+	// border radius must be r+borderWidth
+	// for now we fudge and set to high number. Too big isn't
+	// a problem, but this seems like a hack.
+	el.style.borderRadius = r + 1000 + 'px';
 	el.style.border = '1px solid black';
 	this.dom.appendChild( el );
 	return new Donatello( el );
@@ -88,9 +91,12 @@ Donatello.prototype.circle = function( x, y, r ) {
 /**
  * Ellipse is similar to circle, should consolidate
  */
-Donatello.prototype.ellipse = function( x, y, r1, r2 ) {
-	var el = Donatello.createElement( x, y, r1, r2, 'div');
-	el.style.borderRadius = r1 / 2  + 'px / ' + r2 / 2  + 'px';
+Donatello.prototype.ellipse = function( x, y, rx, ry ) {
+	var el = Donatello.createElement( x, y, 2*rx, 2*ry, 'div');
+	var sw = 20; // TODO: stroke width
+	// TODO: ellipse doesn't look quite right with large borders
+	// and large ration between rx/ry. Inner curve seems 'pinched'.
+	el.style.borderRadius = ( rx + sw ) + 'px / ' + ( ry + sw ) + 'px';
 	el.style.border = '1px solid black';
 	
 	this.dom.appendChild( el );
@@ -283,6 +289,9 @@ Donatello.prototype.path = function( x, y, w, h, path ) {
 * to start with.
 *
 * dx/dy are offsets from start, w is stroke width
+*
+* TODO: add end caps - box-radius for rounded,
+* borders for diagonal. also maybe linejoin
 */
 Donatello.prototype.line = function( x, y, dx, dy, w ) {
 	var stroke = w || 1;
