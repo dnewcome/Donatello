@@ -5,13 +5,15 @@
 	<script>
 		function main() {
 			var paper = Donatello.paper('paper-div', 20, 20, 300, 300 );
-			
-			var circle = paper.circle( 150, 150, 80, 50 );
-			var circle2 = paper.circle( 150, 150, 30, 30 );
-			var circle3 = paper.circle( 150, 150, 10, 20 );
-			circle.setStroke( 'brown' );
-			circle2.setStroke( 'green' );
-			circle3.setStroke( 'red' );
+			var circle = paper.circle( 150, 150, 80, { 
+				'stroke-width': 50,
+				'stroke': 'brown',
+				'fill': 'blue',
+				'stroke-style': 'solid'
+			});
+			// var circle = paper.circle( 150, 150, 80 );
+			var circle2 = paper.circle( 150, 150, 30, { 'stroke-width': 30,'stroke': 'green' } );
+			var circle3 = paper.circle( 150, 150, 10, { 'stroke-width': 20,'stroke': 'red' } );
 		}
 	</script>
 	<style>
