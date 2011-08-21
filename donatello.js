@@ -80,10 +80,7 @@ Donatello.prototype.clear = function() {
  */
 Donatello.prototype.circle = function( x, y, r, s ) {
 	var el = Donatello.createElement( x-r-s, y-r-s, 2*r, 2*r, 'div');
-	// border radius must be r+borderWidth
-	// for now we fudge and set to high number. Too big isn't
-	// a problem, but this seems like a hack.
-	el.style.borderRadius = r + 1000 + 'px';
+	el.style.borderRadius = r + s + 'px';
 	el.style.border = '1px solid black';
 	el.style.borderWidth = s + 'px';
 	this.dom.appendChild( el );
@@ -92,14 +89,14 @@ Donatello.prototype.circle = function( x, y, r, s ) {
 
 /**
  * Ellipse is similar to circle, should consolidate
+ * xy position, xy radius, stroke width
  */
-Donatello.prototype.ellipse = function( x, y, rx, ry ) {
-	var el = Donatello.createElement( x, y, 2*rx, 2*ry, 'div');
-	var sw = 20; // TODO: stroke width
-	// TODO: ellipse doesn't look quite right with large borders
-	// and large ration between rx/ry. Inner curve seems 'pinched'.
-	el.style.borderRadius = ( rx + sw ) + 'px / ' + ( ry + sw ) + 'px';
+Donatello.prototype.ellipse = function( x, y, rx, ry, s ) {
+	var el = Donatello.createElement( x-rx-s, y-ry-s, 2*rx, 2*ry, 'div');
+	el.style.borderRadius = ( rx + s ) + 'px / ' + ( ry + s ) + 'px';
+	// default border
 	el.style.border = '1px solid black';
+	el.style.borderWidth = s + 'px';
 	
 	this.dom.appendChild( el );
 	return new Donatello( el );
@@ -119,12 +116,13 @@ Donatello.prototype.ellipse = function( x, y, rx, ry ) {
  * for this in borderRadius. Also should be re-using circle
  * code for this instead of replicating it here. 
  */
-Donatello.prototype.arc = function( x, y, r ) {
+Donatello.prototype.arc = function( x, y, r, s ) {
 	// clipping region
-	var clipEl = Donatello.createElement( x-r, y-r, 2*r, 2*r, 'div');
+	var clipEl = Donatello.createElement( x-r, y-r, 2*r+s, 2*r+s, 'div');
 	clipEl.style.border = '1px solid black';
 	clipEl.style.overflow = 'hidden';
-	clipEl.style[ Donatello.transform ]= 'skew(30deg)rotate(15deg)';
+	// clipEl.style[ Donatello.transform ]= 'skew(30deg)rotate(15deg)';
+	clipEl.style[ Donatello.transform ]= 'skew(30deg)';
 	this.dom.appendChild( clipEl );
 
 	// circular drawing region 
@@ -133,7 +131,7 @@ Donatello.prototype.arc = function( x, y, r ) {
 	el.style.borderRadius = r + 'px';
 	el.style.border = '3px solid black';
 	*/
-	var el = this.circle( x, y, r ).dom;
+	var el = this.circle( x-r, y-r, r, s ).dom;
 	// need to compensate for transforms made by clipping region 
 	el.style[ Donatello.transform ]= 'skew(-30deg)';
 	
