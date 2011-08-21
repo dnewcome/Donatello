@@ -76,14 +76,16 @@ Donatello.prototype.clear = function() {
 
 /**
  * Draw a circle
+ * center coordinates, radius, stroke width
  */
-Donatello.prototype.circle = function( x, y, r ) {
-	var el = Donatello.createElement( x-r, y-r, 2*r, 2*r, 'div');
+Donatello.prototype.circle = function( x, y, r, s ) {
+	var el = Donatello.createElement( x-r-s, y-r-s, 2*r, 2*r, 'div');
 	// border radius must be r+borderWidth
 	// for now we fudge and set to high number. Too big isn't
 	// a problem, but this seems like a hack.
 	el.style.borderRadius = r + 1000 + 'px';
 	el.style.border = '1px solid black';
+	el.style.borderWidth = s + 'px';
 	this.dom.appendChild( el );
 	return new Donatello( el );
 }
@@ -126,9 +128,12 @@ Donatello.prototype.arc = function( x, y, r ) {
 	this.dom.appendChild( clipEl );
 
 	// circular drawing region 
+	/*
 	var el = Donatello.createElement( -r, -r, 2*r, 2*r, 'div');
 	el.style.borderRadius = r + 'px';
 	el.style.border = '3px solid black';
+	*/
+	var el = this.circle( x, y, r ).dom;
 	// need to compensate for transforms made by clipping region 
 	el.style[ Donatello.transform ]= 'skew(-30deg)';
 	
