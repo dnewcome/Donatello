@@ -3,30 +3,25 @@
 *
 * Provided under the MIT license.
 * See LICENSE file for full text of the license.
-* Copyright 2010 Dan Newcome.
+* Copyright 2011 Dan Newcome.
 */
 
 
 /**
- * Donatello objects are used to represent shapes drawn
- * in the scene. The scene consists of a tree of these.
- *
- * id - id string of an existing DOM element or a reference
- * to the DOM element itself.
- * x/y, w/h - position and size
- */
+* Donatello objects are used to represent shapes drawn
+* in the scene. The scene consists of a tree of these.
+*
+* id - id string of an existing DOM element or a reference
+* to the DOM element itself.
+* x/y, w/h - position and size
+*/
 function Donatello( id, x, y, w, h ) {
 	// TODO fix hacky initialization
 	Donatello.setTransform();
 
 	if( typeof id == 'string' ) {
 		var el = document.getElementById( id );
-		el.style.position = 'relative';
-		el.style.top = x + 'px';
-		el.style.left = y + 'px';
-		el.style.width = w + 'px';
-		el.style.height = h + 'px';
-		
+		Donatello.createElement( x, y, w, h, el );
 		this.dom = el;
 	}
 	else {
@@ -81,7 +76,11 @@ Donatello.setTransform = function() {
  */
 
 Donatello.prototype.rotate = function( deg ) {
-	this.dom.style[ Donatello.transform ] = 'rotate(' + deg + 'deg)';
+	// note that we add the rotation to the existing transform. 
+	// not sure if this will cause problems at any point - we may 
+	// need some more sophisticated managment of the list of applied
+	// transforms later on down the road.
+	this.dom.style[ Donatello.transform ] += 'rotate(' + deg + 'deg)';
 }
 
 Donatello.prototype.clear = function() {
@@ -94,9 +93,29 @@ Donatello.prototype.node = function() {
 	return this.dom;
 }
 
+/** 
+* Translation between drawing terminology and CSS property 
+* names.
+*/
+Donatello.attrMap = {
+	fill: 'backgroundColor',
+	stroke: 'borderColor',
+	'stroke-width': 'borderWidth'
+}
+
+/**
+* Setting attributes looks for mapped attributes first, then
+* passes attribute through as a CSS attribute.
+*/
 Donatello.prototype.attr = function( obj ) {
+	var mapping = Donatello.attrMap;
 	for( attr in obj ) {
-		this.dom.style[attr] = obj[attr];
+		if( mapping[attr] != null ){
+			this.dom.style[mapping[attr]] = obj[attr];
+		} 
+		else {
+			this.dom.style[attr] = obj[attr];
+		}
 	}
 	return this.dom;
 }
@@ -129,12 +148,18 @@ Donatello.prototype.circle = function( x, y, r, a ) {
  * Ellipse is similar to circle, should consolidate
  * xy position, xy radius, stroke width
  */
-Donatello.prototype.ellipse = function( x, y, rx, ry, s ) {
+Donatello.prototype.ellipse = function( x, y, rx, ry, a ) {
+	var s = a && a['stroke-width'] || 1;
+	var c = a && a['stroke'] || 'black';
+	var f = a && a['fill'] || 'transparent';
+	var style = a && a['stroke-style'] || 'solid';
+
 	var el = Donatello.createElement( x-rx-s, y-ry-s, 2*rx, 2*ry, 'div');
 	el.style.borderRadius = ( rx + s ) + 'px / ' + ( ry + s ) + 'px';
-	// default border
-	el.style.border = '1px solid black';
+	el.style.borderStyle = style;
+	el.style.borderColor = c;
 	el.style.borderWidth = s + 'px';
+	el.style.backgroundColor = f;
 	
 	this.dom.appendChild( el );
 	return new Donatello( el );
@@ -145,18 +170,28 @@ Donatello.prototype.ellipse = function( x, y, rx, ry, s ) {
 /**
 *  Draw a rectangular region to the scene.
 */
-Donatello.prototype.rect = function( x, y, w, h ) {
-	return this.pgram( x, y, w, h, null );
+Donatello.prototype.rect = function( x, y, w, h, a ) {
+	return this.pgram( x, y, w, h, null, a );
 }
 
 /**
  * generalized parallelogram, used by rect.
  */
-Donatello.prototype.pgram = function( x, y, dx, dy, a ) {
+Donatello.prototype.pgram = function( x, y, dx, dy, skew, a ) {
+	var s = a && a['stroke-width'] || 1;
+	var c = a && a['stroke'] || 'black';
+	var f = a && a['fill'] || 'transparent';
+	var style = a && a['stroke-style'] || 'solid';
+
 	var el = Donatello.createElement( x, y, dx, dy, 'div');
-	el.style.border = '1px solid black';
-	if( a != null ) {
-		el.style[ Donatello.transform ]= 'skew(' + a + 'deg)';
+
+	el.style.borderStyle = style;
+	el.style.borderColor = c;
+	el.style.borderWidth = s + 'px';
+	el.style.backgroundColor = f;
+
+	if( skew != null ) {
+		el.style[ Donatello.transform ] += 'skew(' + skew + 'deg)';
 	}
 	this.dom.appendChild( el );
 	return new Donatello( el );
@@ -196,9 +231,17 @@ Donatello.prototype.image = function( x, y, w, h, img ) {
 * borders for diagonal. also maybe linejoin
 * 
 * Need better compensation for wide strokes
+*
+* Note that angles are inaccurate for wide stroke widths.
 */
-Donatello.prototype.line = function( x, y, dx, dy, w ) {
-	var stroke = w || 1;
+Donatello.prototype.line = function( x, y, dx, dy, a ) {
+	var w = a && a['stroke-width'] || 1
+	var stroke = w;
+
+	var c = a && a['stroke'] || 'black';
+	var f = a && a['fill'] || 'transparent';
+	var style = a && a['stroke-style'] || 'solid';
+
 	var len = Math.sqrt(dx*dx + dy*dy );
 	var el = document.createElement( 'div' );	
 	el.style.position = 'absolute';
@@ -212,7 +255,9 @@ Donatello.prototype.line = function( x, y, dx, dy, w ) {
 	el.style.height = '0px';
 
 	// setting both borders makes line too thick
-	el.style.borderTop = stroke + 'px solid black';
+	el.style.borderTopStyle = style;
+	el.style.borderTopWidth = stroke + 'px';
+	el.style.borderTopColor = c;
 
 	// find the angle
 	var rot = Math.asin( Math.abs(dy) / len );
@@ -225,7 +270,7 @@ Donatello.prototype.line = function( x, y, dx, dy, w ) {
 		rot = 180-rot;
 	}
 	else if( dx < 0 && dy <  0 ) {
-		rot = 270-rot;
+		rot = 180+rot;
 	}
 	else if( dx >= 0 && dy < 0 ) {
 		rot = 360-rot;

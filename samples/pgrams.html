@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+	<script src="../donatello.js" type="text/javascript"></script>
+	<script>
+		function main() {
+			var colors = [ 
+				'#717171', '#A71717', '#8AA717', '#34A717', '#17A751', '#17A7A7', '#1751A7', '#3417A7' 
+			];
+			var paper = Donatello.paper('paper-div', 20, 20, 500, 500 );
+			paper.attr( {fill:'black'} );
+			var r = 100;
+			for( var i=0; i < 16; i ++ ) {
+				var x = Math.cos( i*Math.PI/8 )*r;
+				var y = Math.sin( i*Math.PI/8 )*r;
+				var rect = paper.pgram( 250 - 60 + x, 250 - 75 + y, 120, 75, 30, { 
+					// 'stroke-width': 4*i,
+					'stroke-width': 3,
+					'stroke': colors[i%8],
+					'stroke-style': 'solid'
+				});
+				rect.rotate( (i*Math.PI/8)*180/Math.PI );
+			}
+		}
+	</script>
+	<style>
+		#paper-div {
+			border: 1px solid black
+		}
+	</style>
+
+</head>
+<body onload='main();'>
+	<div id="paper-div">
+	</div>
+</body>
+</html>
