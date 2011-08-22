@@ -38,7 +38,7 @@ A more complex example would be to arrange a series of ellipses in a geometric p
 
 Which produces the following:
 
-![Ellipses geometric image](ellipses.jpg)
+![Ellipses geometric image](https://github.com/dnewcome/Donatello/blob/master/samples/ellipses.png)
 
 Donatello objects are just DOM elements underneath, so adding event handlers and jQuery
 animations or drag/drop should be a cinch. For example, using jQuery we should be able to 
