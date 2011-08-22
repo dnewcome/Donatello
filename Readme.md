@@ -50,7 +50,7 @@ attach a click handler like so:
         }
     );
 
-# Limitaions
+# Limitations
 
 Donatello is intended to show what can be done natively using only CSS, and there are many inconsistencies that I'm 
 still working out and/or don't know about.
