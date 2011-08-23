@@ -89,6 +89,10 @@ Donatello.prototype.clear = function() {
 	}
 }
 
+Donatello.prototype.delete = function() {
+	this.dom.parentNode.removeChild( this.dom );
+}
+
 Donatello.prototype.node = function() {
 	return this.dom;
 }
