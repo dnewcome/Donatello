@@ -38,7 +38,7 @@ A more complex example would be to arrange a series of ellipses in a geometric p
 
 Which produces the following:
 
-![Ellipses geometric image](ellipses.jpg)
+![Ellipses geometric image](https://github.com/dnewcome/Donatello/raw/master/samples/ellipses.png)
 
 Donatello objects are just DOM elements underneath, so adding event handlers and jQuery
 animations or drag/drop should be a cinch. For example, using jQuery we should be able to 
@@ -50,7 +50,7 @@ attach a click handler like so:
         }
     );
 
-# Limitaions
+# Limitations
 
 Donatello is intended to show what can be done natively using only CSS, and there are many inconsistencies that I'm 
 still working out and/or don't know about.
@@ -67,7 +67,7 @@ the DOM element and applying its CSS, so in order to change the stroke, the shap
 
 # Status
 
-Donatello is super-experimental, designed to see how far CSS could be streched to provide
+Donatello is super-experimental, designed to see how far CSS could be stretched to provide
 general-purpose drawing functions in the browser. The API is in flux and capabilities may be added or 
 removed. I don't want to duplicate what can be done by other libraries like jQuery 
 or using native browser functionality. The API should eventually be very similar to SVG or Raphael.js, but I also don't
