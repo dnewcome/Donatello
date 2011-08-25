@@ -19,6 +19,26 @@ function Donatello( id, x, y, w, h ) {
 	// TODO fix hacky initialization
 	Donatello.setTransform();
 
+	/** 
+	* Translation between drawing terminology and CSS property 
+	* names.
+	*/
+	this.attrMap = {
+		fill: 'backgroundColor',
+		stroke: 'borderColor',
+		'stroke-style': 'borderStyle',
+		// todo: we ignore stroke width becuase it requires
+		// the object to be recalculated
+		'stroke-width': null,
+		'x': null,
+		'y': null,
+		'w': null,
+		'h': null,
+		'type': null,
+		'children': null,
+		'transform': Donatello.transform
+	}
+
 	if( typeof id == 'string' ) {
 		var el = document.getElementById( id );
 		Donatello.createElement( x, y, w, h, el );
@@ -37,6 +57,22 @@ function Donatello( id, x, y, w, h ) {
 */
 Donatello.paper = function( id, x, y, z, w, h ) {
 	return new Donatello( id, x, y, z, w, h );
+}
+
+/** 
+* create drawing graph declaratively
+* par - parent Donatello object
+* a - attribute object 
+* Only works for rect at this stage.
+*/
+Donatello.decl = function( par, a ) {
+	var don;
+	if( a.type == 'rect' ) {
+		don = par.rect( a.x, a.y, a.w, a.h, a );
+	}
+	for( var i=0; i < a.children.length; i++ ) {
+		Donatello.decl( don, a.children[i] );	
+	}
 }
 
 /**
@@ -68,6 +104,9 @@ Donatello.setTransform = function() {
 		console.log( 'css transform: ' + transform );
 		Donatello.transform = transform;
 	}
+	// also return transform - used in attr mapping
+	// part of hacky init that should be fixed somehow
+	return transform;
 }
 
 
@@ -97,27 +136,26 @@ Donatello.prototype.node = function() {
 	return this.dom;
 }
 
-/** 
-* Translation between drawing terminology and CSS property 
-* names.
-*/
-Donatello.attrMap = {
-	fill: 'backgroundColor',
-	stroke: 'borderColor',
-	'stroke-width': 'borderWidth'
-}
 
 /**
 * Setting attributes looks for mapped attributes first, then
 * passes attribute through as a CSS attribute.
 */
 Donatello.prototype.attr = function( obj ) {
-	var mapping = Donatello.attrMap;
+	var mapping = this.attrMap;
 	for( attr in obj ) {
 		if( mapping[attr] != null ){
 			this.dom.style[mapping[attr]] = obj[attr];
 		} 
-		else {
+		else if( 
+			attr != 'stroke-width' && 
+			attr != 'x' && 
+			attr != 'y' && 
+			attr != 'w' && 
+			attr != 'h' && 
+			attr != 'type' && 
+			attr != 'children' 
+		) {
 			this.dom.style[attr] = obj[attr];
 		}
 	}
@@ -179,26 +217,34 @@ Donatello.prototype.rect = function( x, y, w, h, a ) {
 }
 
 /**
+* Set up some reasonable default values if attr array
+* is missing or underspecified
+*/
+Donatello.attrDefaults = function( a ) {
+	a = a || {};
+	if( !a['stroke-width'] ) a['stroke-width'] = 1;
+	if( !a['stroke'] ) a['stroke'] = 'black';
+	if( !a['fill'] ) a['fill'] = 'transparent';
+	if( !a['stroke-style'] ) a['stroke-style'] = 'solid';
+	return a;
+};
+
+/**
  * generalized parallelogram, used by rect.
  */
 Donatello.prototype.pgram = function( x, y, dx, dy, skew, a ) {
-	var s = a && a['stroke-width'] || 1;
-	var c = a && a['stroke'] || 'black';
-	var f = a && a['fill'] || 'transparent';
-	var style = a && a['stroke-style'] || 'solid';
-
+	a = Donatello.attrDefaults( a );
 	var el = Donatello.createElement( x, y, dx, dy, 'div');
 
-	el.style.borderStyle = style;
-	el.style.borderColor = c;
-	el.style.borderWidth = s + 'px';
-	el.style.backgroundColor = f;
+	el.style.borderWidth = a['stroke-width'] + 'px';
 
 	if( skew != null ) {
 		el.style[ Donatello.transform ] += 'skew(' + skew + 'deg)';
 	}
 	this.dom.appendChild( el );
-	return new Donatello( el );
+	var don = new Donatello( el );
+	don.attr( a );
+	return don;
 }
 
 /**

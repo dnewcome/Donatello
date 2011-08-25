@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+	<script src="../donatello.js" type="text/javascript"></script>
+	<script src="../experimental.js" type="text/javascript"></script>
+	<script>
+		/**
+		* Kitchen sink drawing method for smoke test.
+		*/
+		function main() {
+			var paper = Donatello.paper('paper-div', 20, 20, 300, 300 );
+
+			// example of a nested set of objects using declarative json
+			// initialization
+			var rect = Donatello.decl( paper, { type:'rect', x:30, y:100, w:100, h:100, 
+				'fill':'green',
+				stroke:'red',
+				'stroke-width':5,
+				'boxShadow': '4px 4px 4px 2px #000',
+				'transform': 'rotate(20deg)',
+				children: [ { type:'rect', x:5, y:5, h:10, w:10, fill:'red', children:[] } ]
+			});
+		}
+	</script>
+	<style>
+		#paper-div {
+			border: 1px solid black
+		}
+	</style>
+
+</head>
+<body onload='main();'>
+	<div id="paper-div">
+	</div>
+</body>
+</html>
