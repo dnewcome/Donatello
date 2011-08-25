@@ -121,3 +121,15 @@ Donatello.prototype.path = function( x, y, w, h, path ) {
 	return new Donatello( canvas );
 }
 
+/**
+* Thinking about doing some simple layout containers
+* Not sure if this is the domain of a drawing tool though
+*/
+function StackPanel( par, orientation ) {
+
+}
+
+StackPanel.prototype.add = function( item ) {
+	item.attr( { float:'left',stroke:'blue',position:'relative' } );	
+}
+

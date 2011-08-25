@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+	<script src="../donatello.js" type="text/javascript"></script>
+	<script src="../experimental.js" type="text/javascript"></script>
+	<script>
+		/**
+		*/
+		function main() {
+			var paper = Donatello.paper('paper-div', 20, 20, 300, 300 );
+			var rect = paper.rect( 10, 50, 100, 100, {'fill':'green',stroke:'red','stroke-width':5} );
+			var rect2 = paper.rect( 50, 100, 100, 100, {'fill':'green',stroke:'red','stroke-width':5} );
+				
+			var stack = new StackPanel( paper );
+			stack.add( rect );
+			stack.add( rect2 );
+		}
+	</script>
+	<style>
+		#paper-div {
+			border: 1px solid black
+		}
+	</style>
+
+</head>
+<body onload='main();'>
+	<div id="paper-div">
+	</div>
+</body>
+</html>
