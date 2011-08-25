@@ -8,22 +8,29 @@
 				'#71717', '#A71717', '#8AA717', '#34A717', '#17A751', '#17A7A7', '#1751A7', '#3417A7' 
 			];
 			var paper = Donatello.paper('paper-div', 20, 20, 500, 500 );
-			var p1 = { x: 50, y: 100 };
-			var p2 = { x: 100, y: 50 };
+			
+			// endpoints and control point
+			var p1 = { x: 50, y: 300 };
+			var p2 = { x: 300, y: 50 };
 			var cp = { x: 50, y: 50 };
 
 			var points = [];
 			points.push( p1 );
 
-			for( var i=0; i < 10; i ++ ) {
-				// calculate the intermediate points
-				var p1i = { x: ((cp.x-p1.x)/10*i)+p1.x, y: ((cp.y-p1.y)/10*i)+p1.y };
-				var p2i = { x: ((p2.x-cp.x)/10*i)+p2.x, y: ((p2.y-cp.y)/10*i)+p2.y };
+			// resolution determines number of line semgents used 
+			// to approximate the curve
+			var res = 5;
+
+			for( var i=0; i < res; i ++ ) {
+				// points on the polygon 
+				var p1i = { x: ((cp.x-p1.x)/res*i)+p1.x, y: ((cp.y-p1.y)/res*i)+p1.y };
+				var p2i = { x: ((p2.x-cp.x)/res*i)+p2.x, y: ((p2.y-cp.y)/res*i)+p2.y };
+
 				console.log( p1i );
 				console.log( p2i );
 
 				// points on the curve
-				points.push( { x: ((p2i.x-p1i.x)/10*i)+p1.x, y: ((p2i.y-p1i.y)/10*i)+p1.y } );
+				points.push( { x: ((p2i.x-p1i.x)/res*i)+p1.x, y: ((p2i.y-p1i.y)/res*i)+p1.y } );
 
 			}
 			console.log( points );
