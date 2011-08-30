@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+	<script src="../donatello.js" type="text/javascript"></script>
+	<script>
+		function main() {
+			var colors = [ 
+				'#71717', '#A71717', '#8AA717', '#34A717', '#17A751', '#17A7A7', '#1751A7', '#3417A7' 
+			];
+			var paper = Donatello.paper('paper-div', 20, 20, 500, 500 );
+			var r1 = 50;
+			var r2 = 150;
+			for( var i=0; i < 16; i ++ ) {
+				var x1 = Math.cos( i*Math.PI/8 )*r1;
+				var y1 = Math.sin( i*Math.PI/8 )*r1;
+				var x2 = Math.cos( i*Math.PI/8 )*r2;
+				var y2 = Math.sin( i*Math.PI/8 )*r2;
+				console.log( 'iteration ' + i + ' ' + (x2-x1) + ' ' + (y2-y1) );
+				var line = paper.rect( 250+x1, 250+y1, 50, 50,
+				 { 
+					'stroke-width': 1,
+					// TODO: can't use 'fill' here since fill maps to 'background-color'
+					// TODO: should it be 'background backgroundImage? both work.
+					// 'background': Donatello.createLinearGradient( 90, colors[i%8], '#FFFFFF' ),
+					'backgroundImage': Donatello.createLinearGradient( 0, colors[i%8], '#FFFFFF' ),
+					'stroke-style': 'solid'
+				});
+			}
+		}
+	</script>
+	<style>
+		#paper-div {
+			border: 1px solid black
+		}
+	</style>
+
+</head>
+<body onload='main();'>
+	<div id="paper-div">
+	</div>
+</body>
+</html>

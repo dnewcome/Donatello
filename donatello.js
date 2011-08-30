@@ -34,6 +34,7 @@ function Donatello( id, x, y, w, h ) {
 		'y': null,
 		'w': null,
 		'h': null,
+		'r': 'borderRadius',
 		'type': null,
 		'children': null,
 		'transform': Donatello.transform
@@ -111,6 +112,45 @@ Donatello.setTransform = function() {
 
 
 /**
+* Internal function for creating the appropriate 
+* linear gradient function
+*
+* TODO: need to map between moz style gradient spec (deg) 
+* and webkit (endpoints)
+*/
+Donatello.createLinearGradient = function( deg, color1, color2 ) {
+	var retval;
+	switch( Donatello.transform ) {
+		case 'MozTransform':
+			retval = '-moz-linear-gradient(' + deg + 'deg,' + color1 + ', ' + color2 + ')';
+			//retval = '-moz-linear-gradient(top,' + color1 + ', ' + color2 + ')';
+			break;
+		case 'webkitTransform':
+			// retval = '-webkit-gradient(linear, left top, left bottom, from(' + color1 + '), to(' + color2 + '))'; 
+			retval = '-webkit-gradient(linear, left top, left bottom, from(' + color1 + '), to(' + color2 + '))'; 
+			break;
+		case 'msTransform':
+			// note that filter: attribute must be set rather than background:
+			retval = 'progid:DXImageTransform.Microsoft.gradient(startColorstr="' + color1 + '", endColorstr="' + color2 + '")'; 
+			break;
+		case 'OTransform':
+			retval = '-o-linear-gradient(0deg,' + color1 + ',' + color2 + ')';
+			break;
+	}
+	console.log( 'gradient: ' + retval );
+	return retval;
+}
+
+
+/**
+* Internal function for creating the appropriate 
+* radial gradient function
+*/
+Donatello.createRadialGradient = function() {
+	throw 'Radial gradients not implemented';
+}
+
+/**
  * Transformation methods that apply to all shapes
  */
 
@@ -145,7 +185,14 @@ Donatello.prototype.attr = function( obj ) {
 	var mapping = this.attrMap;
 	for( attr in obj ) {
 		if( mapping[attr] != null ){
-			this.dom.style[mapping[attr]] = obj[attr];
+			if( attr == 'r' ) {
+				// special case to add 'px' to radius specification
+				// TODO: see about simplifying this stuff
+				this.dom.style[mapping[attr]] = obj[attr] + 'px';
+			}
+			else {
+				this.dom.style[mapping[attr]] = obj[attr];
+			}
 		} 
 		else if( 
 			attr != 'stroke-width' && 
@@ -159,7 +206,7 @@ Donatello.prototype.attr = function( obj ) {
 			this.dom.style[attr] = obj[attr];
 		}
 	}
-	return this.dom;
+	return this;
 }
 
 
