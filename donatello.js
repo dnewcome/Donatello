@@ -1,5 +1,5 @@
 /**
-* Donatello - A pure CSS drawing library.
+* Donatello - A pure CSS vector drawing library.
 *
 * Provided under the MIT license.
 * See LICENSE file for full text of the license.
@@ -152,21 +152,24 @@ Donatello.createLinearGradient = function( deg, color1, color2 ) {
 	var retval;
 	switch( Donatello.transform ) {
 		case 'MozTransform':
-			retval = '-moz-linear-gradient(' + deg*45 + 'deg,' + color1 + ', ' + color2 + ')';
-			//retval = '-moz-linear-gradient(top,' + color1 + ', ' + color2 + ')';
+			retval = '-moz-linear-gradient(' + 
+				deg*45 + 'deg,' + color1 + ', ' + color2 + ')';
 			break;
 		case 'webkitTransform':
-			// retval = '-webkit-gradient(linear, left top, left bottom, from(' + color1 + '), to(' + color2 + '))'; 
-			retval = '-webkit-gradient(linear, ' + webkitLine + ', from(' + color1 + '), to(' + color2 + '))'; 
+			retval = '-webkit-gradient(linear, ' + webkitLine + 
+				', from(' + color1 + '), to(' + color2 + '))'; 
 			break;
 		case 'msTransform':
 			// note that filter: attribute must be set rather than background:
 			// in IE gradient type is either 0 (top to bottom) or 1 (left to right)
 			var gtype = Math.floor(deg%4/2)
-			retval = 'progid:DXImageTransform.Microsoft.gradient(GradientType=' + gtype + ', startColorstr="' + color1 + '", endColorstr="' + color2 + '")'; 
+			retval = 'progid:DXImageTransform.Microsoft.gradient(GradientType=' + 
+				gtype + ', startColorstr="' + 
+				color1 + '", endColorstr="' + color2 + '")'; 
 			break;
 		case 'OTransform':
-			retval = '-o-linear-gradient(' + deg*45 +'deg,' + color1 + ',' + color2 + ')';
+			retval = '-o-linear-gradient(' + deg*45 +'deg,' + 
+				color1 + ',' + color2 + ')';
 			break;
 	}
 	console.log( 'gradient: ' + retval );
@@ -184,7 +187,8 @@ Donatello.createRadialGradient = function( deg, color1, color2 ) {
 	var retval;
 	switch( Donatello.transform ) {
 		case 'MozTransform':
-			retval = '-moz-radial-gradient(' + deg + 'deg,' + color1 + ', ' + color2 + ')';
+			retval = '-moz-radial-gradient(' + deg + 'deg,' + 
+				color1 + ', ' + color2 + ')';
 			break;
 		default:
 			throw 'Gradients not implemented for ' + Donatello.transform;
@@ -260,11 +264,14 @@ Donatello.prototype.attr = function( obj ) {
 			}
 		} 
 		else if( 
+			// ignore attributes that we ordinarily set using
+			// positional arguments.
 			attr != 'stroke-width' && 
 			attr != 'x' && 
 			attr != 'y' && 
 			attr != 'w' && 
 			attr != 'h' && 
+			// children and type are used for declarative instantiation
 			attr != 'type' && 
 			attr != 'children' 
 		) {
@@ -284,18 +291,22 @@ Donatello.prototype.attr = function( obj ) {
  * center coordinates, radius, attributes 
  */
 Donatello.prototype.circle = function( x, y, r, a ) {
-	var s = a && a['stroke-width'] || 1;
-	var c = a && a['stroke'] || 'black';
-	var f = a && a['fill'] || 'transparent';
-	var style = a && a['stroke-style'] || 'solid';
+	a = Donatello.attrDefaults( a );
+	var s = a['stroke-width'];
+	var c = a['stroke'];
+	var f = a['fill'];
+	var style = a['stroke-style'];
 	var el = Donatello.createElement( x-r-s, y-r-s, 2*r, 2*r, 'div');
 	el.style.borderRadius = r + s + 'px';
 	el.style.borderStyle = style;
 	el.style.borderColor = c;
 	el.style.backgroundColor = f;
 	el.style.borderWidth = s  + 'px';
+
 	this.dom.appendChild( el );
-	return new Donatello( el );
+	var don = new Donatello( el ); 
+	don.attr( a );
+	return don;
 }
 
 /**
@@ -303,10 +314,11 @@ Donatello.prototype.circle = function( x, y, r, a ) {
  * xy position, xy radius, stroke width
  */
 Donatello.prototype.ellipse = function( x, y, rx, ry, a ) {
-	var s = a && a['stroke-width'] || 1;
-	var c = a && a['stroke'] || 'black';
-	var f = a && a['fill'] || 'transparent';
-	var style = a && a['stroke-style'] || 'solid';
+	a = Donatello.attrDefaults( a );
+	var s = a['stroke-width'];
+	var c = a['stroke'];
+	var f = a['fill'];
+	var style = a['stroke-style'];
 
 	var el = Donatello.createElement( x-rx-s, y-ry-s, 2*rx, 2*ry, 'div');
 	el.style.borderRadius = ( rx + s ) + 'px / ' + ( ry + s ) + 'px';
@@ -316,10 +328,10 @@ Donatello.prototype.ellipse = function( x, y, rx, ry, a ) {
 	el.style.backgroundColor = f;
 	
 	this.dom.appendChild( el );
-	return new Donatello( el );
+	var don = new Donatello( el ); 
+	don.attr( a );
+	return don; 
 }
-
-
 
 /**
 *  Draw a rectangular region to the scene.
@@ -327,19 +339,6 @@ Donatello.prototype.ellipse = function( x, y, rx, ry, a ) {
 Donatello.prototype.rect = function( x, y, w, h, a ) {
 	return this.pgram( x, y, w, h, null, a );
 }
-
-/**
-* Set up some reasonable default values if attr array
-* is missing or underspecified
-*/
-Donatello.attrDefaults = function( a ) {
-	a = a || {};
-	if( !a['stroke-width'] ) a['stroke-width'] = 1;
-	if( !a['stroke'] ) a['stroke'] = 'black';
-	if( !a['fill'] ) a['fill'] = 'transparent';
-	if( !a['stroke-style'] ) a['stroke-style'] = 'solid';
-	return a;
-};
 
 /**
  * generalized parallelogram, used by rect.
@@ -362,21 +361,25 @@ Donatello.prototype.pgram = function( x, y, dx, dy, skew, a ) {
 /**
 * Draw text to the scene using a <div> tag.
 */
-Donatello.prototype.text = function( x, y, str ) {
+Donatello.prototype.text = function( x, y, str, a ) {
 	var el = Donatello.createElement( x, y, null, null, 'div');
 	el.innerHTML = str;
 	this.dom.appendChild( el );
-	return new Donatello( el );
+	var don = new Donatello( el );
+	don.attr( a );
+	return don;
 }
 
 /**
 * Draw an image to the scene using an <img> tag.
 */
-Donatello.prototype.image = function( x, y, w, h, img ) {
+Donatello.prototype.image = function( x, y, w, h, img, a ) {
 	var el = Donatello.createElement( x, y, w, h, 'img');
 	el.src = img;
 	this.dom.appendChild( el );
-	return new Donatello( el );
+	var don = new Donatello( el );
+	don.attr( a );
+	return don;
 }
 
 /**
@@ -387,12 +390,12 @@ Donatello.prototype.image = function( x, y, w, h, img ) {
 * borders for diagonal. also maybe linejoin
 */
 Donatello.prototype.line = function( x, y, dx, dy, a ) {
-	var w = a && a['stroke-width'] || 1
+	a = Donatello.attrDefaults( a );
+	var w = a['stroke-width']; 
 	var stroke = w;
-
-	var c = a && a['stroke'] || 'black';
-	var f = a && a['fill'] || 'transparent';
-	var style = a && a['stroke-style'] || 'solid';
+	var c = a['stroke'];
+	var f = a['fill'];
+	var style = a['stroke-style'];
 
 	var len = Math.sqrt(dx*dx + dy*dy );
 	var el = document.createElement( 'div' );	
@@ -428,11 +431,14 @@ Donatello.prototype.line = function( x, y, dx, dy, a ) {
 		rot = 360-rot;
 	}
 
-	el.style[ Donatello.transform ] = 'rotate(' + rot + 'deg) translate(0px, -' + stroke/2 + 'px)';
+	el.style[ Donatello.transform ] = 
+		'rotate(' + rot + 'deg) translate(0px, -' + stroke/2 + 'px)';
 	// transform origin referenced from border width
 	el.style[ Donatello.transform + 'Origin' ] = '0px 0px';
 	this.dom.appendChild( el );
-	return new Donatello( el );
+	var dom = new Donatello( el );
+	dom.attr( a );
+	return dom;
 }
 
 /**
@@ -455,3 +461,17 @@ Donatello.createElement = function( x, y, w, h, name ) {
 	el.style.height = h + 'px';
 	return el;
 }
+
+/**
+* Set up some reasonable default values if attr array
+* is missing or underspecified
+*/
+Donatello.attrDefaults = function( a ) {
+	a = a || {};
+	if( !a['stroke-width'] ) a['stroke-width'] = 1;
+	if( !a['stroke'] ) a['stroke'] = 'black';
+	if( !a['fill'] ) a['fill'] = 'transparent';
+	if( !a['stroke-style'] ) a['stroke-style'] = 'solid';
+	return a;
+};
+
