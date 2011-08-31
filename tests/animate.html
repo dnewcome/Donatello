@@ -14,13 +14,41 @@
 			var rect = paper.rect( 30, 100, 100, 100, {
 				'fill':'green',
 				stroke:'red',
-				'stroke-width':5,
+				'stroke-width':2,
 				r:20
 			});
+
+
 			// using builtin animation 
 			// rect.animate( 3, {r:40});
 			// using jquery draggable
 			$(rect.node()).draggable();
+			$(rect.node()).click( function( ev ){
+
+				// zoom without compensating for offset
+				// note that 'scale' relies on the zachstronaut code
+				// $( this ).animate( {'scale':1.5}, 1000 );
+
+				// zoom, compensating for offset, allowing zoom 'in place' without
+				// using scaling operator
+				var x = $(this).position().left;
+				var y = $(this).position().top;
+				// note that animating properties such as border-width works, however it breaks
+				// the abstraction of the drawing api, where we use 'stroke' instead. I don't
+				// want to redo all of the work done in jquery UI for animate, so I think
+				// we'll just live with this.
+				$( this ).animate( {	
+					'width':150,'height':150,'border-width':10,'top':y-25,'left':x-25 
+				}, { duration:100 } );
+				ev.stopPropagation();
+			});
+			$( paper.node() ).click( function(){ 
+				// $( rect.node() ).animate( {'scale':1}, 1000 );
+
+				var x = $(rect.node()).position().left;
+				var y = $(rect.node()).position().top;
+				$( rect.node() ).animate( {'width':100,'height':100,'top':y+25,'left':x+25 }, 100 );
+			});
 
 			var rect2 = paper.rect( 100, 100, 100, 100, {
 				'fill':'green',
