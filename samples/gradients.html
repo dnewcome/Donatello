@@ -5,10 +5,23 @@
 	<script>
 		function main() {
 			var colors = [ 
-				'#71717', '#A71717', '#8AA717', '#34A717', '#17A751', '#17A7A7', '#1751A7', '#3417A7' 
+				'#717171', '#A71717', '#8AA717', '#34A717', '#17A751', '#17A7A7', '#1751A7', '#3417A7' 
 			];
 			var paper = Donatello.paper('paper-div', 20, 20, 500, 500 );
-			var r1 = 50;
+
+	/*
+			var rect = paper.rect( 0, 0, 50, 50,
+			 { 
+				'stroke-width': 1,
+				// TODO: can't use 'fill' here since fill maps to 'background-color'
+				// TODO: should it be 'background backgroundImage? both work.
+				// 'background': Donatello.createLinearGradient( 90, colors[i%8], '#FFFFFF' ),
+				'backgroundImage': Donatello.createRadialGradient( 0, colors[1], '#FFFFFF' ),
+				'stroke-style': 'solid'
+			});
+	*/
+
+			var r1 = 150;
 			var r2 = 150;
 			for( var i=0; i < 16; i ++ ) {
 				var x1 = Math.cos( i*Math.PI/8 )*r1;
@@ -22,7 +35,7 @@
 					// TODO: can't use 'fill' here since fill maps to 'background-color'
 					// TODO: should it be 'background backgroundImage? both work.
 					// 'background': Donatello.createLinearGradient( 90, colors[i%8], '#FFFFFF' ),
-					'backgroundImage': Donatello.createLinearGradient( 0, colors[i%8], '#FFFFFF' ),
+					'backgroundImage': Donatello.createLinearGradient( i*Math.PI/8*180/Math.PI, colors[i%8], '#FFFFFF' ),
 					'stroke-style': 'solid'
 				});
 			}

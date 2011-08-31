@@ -114,27 +114,59 @@ Donatello.setTransform = function() {
 /**
 * Internal function for creating the appropriate 
 * linear gradient function
-*
-* TODO: need to map between moz style gradient spec (deg) 
-* and webkit (endpoints)
 */
 Donatello.createLinearGradient = function( deg, color1, color2 ) {
+	// we round angles down to multiples of 45deg
+	deg = Math.floor(deg/45);
+	// default to centered vertical gradient
+	var webkitLine = "center top, center bottom";
+	switch( deg ) {
+		case 0:
+			webkitLine = "left center, right center";
+			break;
+		case 1:
+			webkitLine = "left bottom, right top";
+			break;
+		case 2:
+			webkitLine = "center bottom, center top";
+			break;
+		case 3:
+			webkitLine = "right bottom, left top";
+			break;
+		case 4:
+			webkitLine = "right center, left center";
+			break;
+		case 5:
+			webkitLine = "right top, left bottom";
+			break;
+		case 6:
+			webkitLine = "center top, center bottom";
+			break;
+		case 7:
+			webkitLine = "left top, right bottom";
+			break;
+		case 8:
+			webkitLine = "left center, right center";
+			break;
+	}
 	var retval;
 	switch( Donatello.transform ) {
 		case 'MozTransform':
-			retval = '-moz-linear-gradient(' + deg + 'deg,' + color1 + ', ' + color2 + ')';
+			retval = '-moz-linear-gradient(' + deg*45 + 'deg,' + color1 + ', ' + color2 + ')';
 			//retval = '-moz-linear-gradient(top,' + color1 + ', ' + color2 + ')';
 			break;
 		case 'webkitTransform':
 			// retval = '-webkit-gradient(linear, left top, left bottom, from(' + color1 + '), to(' + color2 + '))'; 
-			retval = '-webkit-gradient(linear, left top, left bottom, from(' + color1 + '), to(' + color2 + '))'; 
+			retval = '-webkit-gradient(linear, ' + webkitLine + ', from(' + color1 + '), to(' + color2 + '))'; 
 			break;
 		case 'msTransform':
 			// note that filter: attribute must be set rather than background:
-			retval = 'progid:DXImageTransform.Microsoft.gradient(startColorstr="' + color1 + '", endColorstr="' + color2 + '")'; 
+			// in IE gradient type is either 0 (top to bottom) or 1 (left to right)
+			var gtype = Math.floor(deg%4/2)
+			retval = 'progid:DXImageTransform.Microsoft.gradient(GradientType=' + gtype + ', startColorstr="' + color1 + '", endColorstr="' + color2 + '")'; 
 			break;
 		case 'OTransform':
-			retval = '-o-linear-gradient(0deg,' + color1 + ',' + color2 + ')';
+			retval = '-o-linear-gradient(' + deg*45 +'deg,' + color1 + ',' + color2 + ')';
 			break;
 	}
 	console.log( 'gradient: ' + retval );
@@ -145,6 +177,8 @@ Donatello.createLinearGradient = function( deg, color1, color2 ) {
 /**
 * Internal function for creating the appropriate 
 * radial gradient function
+* TODO: this is incomplete - need to decide on what level of
+* support to provide for radial gradients
 */
 Donatello.createRadialGradient = function( deg, color1, color2 ) {
 	var retval;
@@ -177,7 +211,7 @@ Donatello.prototype.clear = function() {
 	}
 }
 
-Donatello.prototype.delete = function() {
+Donatello.prototype['delete'] = function() {
 	this.dom.parentNode.removeChild( this.dom );
 }
 
@@ -346,21 +380,11 @@ Donatello.prototype.image = function( x, y, w, h, img ) {
 }
 
 /**
-* Draw a straight line. Some browsers offset the 
-* line a bit so there can be some quirks trying
-* to line up lines precisely. Also vertical lines
-* are blurry. Should be able to optimize by looking
-* for x=0 and drawing the box in a different orientation
-* to start with.
-*
+* Draw a straight line.
 * dx/dy are offsets from start, w is stroke width
 *
 * TODO: add end caps - box-radius for rounded,
 * borders for diagonal. also maybe linejoin
-* 
-* Need better compensation for wide strokes
-*
-* Note that angles are inaccurate for wide stroke widths.
 */
 Donatello.prototype.line = function( x, y, dx, dy, a ) {
 	var w = a && a['stroke-width'] || 1

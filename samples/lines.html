@@ -8,6 +8,7 @@
 				'#71717', '#A71717', '#8AA717', '#34A717', '#17A751', '#17A7A7', '#1751A7', '#3417A7' 
 			];
 			var paper = Donatello.paper('paper-div', 20, 20, 500, 500 );
+			var circle = paper.circle( 250, 250, 40 );
 			var r1 = 50;
 			var r2 = 150;
 			for( var i=0; i < 16; i ++ ) {
@@ -19,9 +20,18 @@
 				var line = paper.line( 250+x1, 250+y1, x2-x1, y2-y1,
 				 { 
 					'stroke-width': 4*i,
+					// 'stroke-width': 23,
 					'stroke': colors[i%8],
 					'stroke-style': 'solid'
 				});
+			}
+			for( var i=0; i < 16; i ++ ) {
+				var x1 = Math.cos( i*Math.PI/8 )*r1;
+				var y1 = Math.sin( i*Math.PI/8 )*r1;
+				var x2 = Math.cos( i*Math.PI/8 )*r2;
+				var y2 = Math.sin( i*Math.PI/8 )*r2;
+				console.log( 'iteration ' + i + ' ' + (x2-x1) + ' ' + (y2-y1) );
+				var line = paper.circle( 250+x1, 250+y1, 2); 
 			}
 		}
 	</script>
