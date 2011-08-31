@@ -12,10 +12,12 @@
 			// endpoints and control point
 			var p1 = { x: 50, y: 300 };
 			var p2 = { x: 300, y: 150 };
-			var cp = { x: 50, y: 50 };
+			var cp1 = { x: 50, y: 75 };
+			var cp2 = { x: 200, y: 50 };
 			paper.rect( p1.x, p1.y, 3, 3 );
 			paper.rect( p2.x, p2.y, 3, 3 );
-			paper.rect( cp.x, cp.y, 3, 3 );
+			paper.rect( cp1.x, cp1.y, 3, 3 );
+			paper.rect( cp2.x, cp2.y, 3, 3 );
 
 			var points = [];
 			points.push( p1 );
@@ -26,9 +28,8 @@
 
 			for( var i=0; i < res; i++ ) {
 				// points on the polygon 
-				var p1i = { x: ((cp.x-p1.x)/res*i)+p1.x, y: ((cp.y-p1.y)/res*i)+p1.y };
-				// var p2i = { x: ((p2.x-cp.x)/res*i)+p2.x, y: ((p2.y-cp.y)/res*i)+p2.y };
-				var p2i = { x: ((p2.x-cp.x)/res*i)+cp.x, y: ((p2.y-cp.y)/res*i)+cp.y };
+				var p1i = { x: ((cp1.x-p1.x)/res*i)+p1.x, y: ((cp1.y-p1.y)/res*i)+p1.y };
+				var p2i = { x: ((p2.x-cp2.x)/res*i)+cp2.x, y: ((p2.y-cp2.y)/res*i)+cp2.y };
 
 				paper.rect( p1i.x, p1i.y, 1, 1, {stroke:'red'} );
 				paper.rect( p2i.x, p2i.y, 1, 1, {stroke:'yellow'} );
