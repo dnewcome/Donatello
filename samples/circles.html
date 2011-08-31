@@ -8,6 +8,9 @@
 				'#71717', '#A71717', '#8AA717', '#34A717', '#17A751', '#17A7A7', '#1751A7', '#3417A7' 
 			];
 			var paper = Donatello.paper('paper-div', 20, 20, 500, 500 );
+			// setting background helps find bugs in shapes accidentally 
+			// setting their parent's attributes
+			paper.attr( {fill:'black'} );
 			var r = 100;
 			for( var i=0; i < 8; i ++ ) {
 				var x = Math.cos( i*Math.PI/4 )*r;
