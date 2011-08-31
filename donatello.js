@@ -146,8 +146,17 @@ Donatello.createLinearGradient = function( deg, color1, color2 ) {
 * Internal function for creating the appropriate 
 * radial gradient function
 */
-Donatello.createRadialGradient = function() {
-	throw 'Radial gradients not implemented';
+Donatello.createRadialGradient = function( deg, color1, color2 ) {
+	var retval;
+	switch( Donatello.transform ) {
+		case 'MozTransform':
+			retval = '-moz-radial-gradient(' + deg + 'deg,' + color1 + ', ' + color2 + ')';
+			break;
+		default:
+			throw 'Gradients not implemented for ' + Donatello.transform;
+	}
+	console.log( 'gradient: ' + retval );
+	return retval;
 }
 
 /**
@@ -174,6 +183,28 @@ Donatello.prototype.delete = function() {
 
 Donatello.prototype.node = function() {
 	return this.dom;
+}
+
+/**
+* Time given in seconds
+* Easing is always in-out
+*/
+Donatello.prototype.animate = function( time, attrs ) {
+	// TODO: only works in firefox right now
+	var me = this;
+	this.attr( {'MozTransition':'all ' + time + 's ease-in 0s'});
+	// in order for the animation to work, we have to set
+	// moz-transition first, then later in setTimout set the props
+	setTimeout( function() { me.attr( attrs ) }, 0 );
+	return this.dom;
+}
+
+/*
+* Stop the current animation
+*/
+Donatello.prototype.stop = function( time, attrs ) {
+	// TODO: this doesn't work how it should
+	this.attr( {'MozTransition':''});
 }
 
 
@@ -373,9 +404,9 @@ Donatello.prototype.line = function( x, y, dx, dy, a ) {
 		rot = 360-rot;
 	}
 
-	el.style[ Donatello.transform ] = 'rotate(' + rot + 'deg)';
-	// note we offset origin to account for using only border top 
-	el.style[ Donatello.transform + 'Origin' ] = '0px ' + stroke/2 + 'px';
+	el.style[ Donatello.transform ] = 'rotate(' + rot + 'deg) translate(0px, -' + stroke/2 + 'px)';
+	// transform origin referenced from border width
+	el.style[ Donatello.transform + 'Origin' ] = '0px 0px';
 	this.dom.appendChild( el );
 	return new Donatello( el );
 }
