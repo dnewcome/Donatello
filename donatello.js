@@ -437,7 +437,10 @@ Donatello.prototype.line = function( x, y, dx, dy, a ) {
 	el.style[ Donatello.transform + 'Origin' ] = '0px 0px';
 	this.dom.appendChild( el );
 	var dom = new Donatello( el );
-	dom.attr( a );
+
+	// applying styles messes up lines, fix this
+	// dom.attr( a );
+
 	return dom;
 }
 
