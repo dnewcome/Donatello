@@ -172,7 +172,7 @@ Donatello.createLinearGradient = function( deg, color1, color2 ) {
 				color1 + ',' + color2 + ')';
 			break;
 	}
-	console.log( 'gradient: ' + retval );
+	// console.log( 'gradient: ' + retval );
 	return retval;
 }
 
@@ -258,6 +258,29 @@ Donatello.prototype.attr = function( obj ) {
 				// special case to add 'px' to radius specification
 				// TODO: see about simplifying this stuff
 				this.dom.style[mapping[attr]] = obj[attr] + 'px';
+			}
+			else if( attr == 'fill' ) {
+				// hacky way to check for gradient spec
+				if( obj['fill'] && obj['fill'].length > 7 ) {
+					var str = obj['fill'];
+					this.dom.style['backgroundImage'] = Donatello.createLinearGradient(
+						str.substr( 0, 2 ),
+						str.substr( 3, 7 ),
+						str.substr( 11, 7 )
+					);	
+				}
+				else {
+					this.dom.style[mapping[attr]] = obj[attr];
+				}
+			}
+			// scale in raphael has a center point. Need to convert
+			// that to transformOrigin.
+			else if( attr == 'scale' ) {
+				/*
+ 				Pretty sure this isn't going to work this easily
+				console.log('scaling');
+				this.dom.style['transform'] = 'scale( ' + obj[attr]+ ' )';
+				*/
 			}
 			else {
 				this.dom.style[mapping[attr]] = obj[attr];
