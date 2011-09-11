@@ -17,7 +17,8 @@
 */
 function Donatello( id, x, y, w, h ) {
 	// TODO fix hacky initialization
-	Donatello.setTransform();
+	// Donatello.setTransform();
+	// if( id != null ) Donatello.setTransform();
 
 	/** 
 	* Translation between drawing terminology and CSS property 
@@ -37,18 +38,16 @@ function Donatello( id, x, y, w, h ) {
 		'r': 'borderRadius',
 		'type': null,
 		'children': null,
-		'transform': Donatello.transform
+		'transform': Donatello.getTransform()
 	}
 
 	// some attributes we want to read a different css value
 	// than we use for writing. e.g. top/offsetTop
 	this.attrReverseMap = Donatello.merge( {
-		'x': 'top'
-	/*
-		'y': 'offsetTop',
-		'w': 'offsetWidth',
-		'h': 'offsetHeight'
-	*/
+		'x': 'top',
+		'y': 'left',
+		'w': 'width',
+		'h': 'height'
 	}, this.attrMap );
 
 	if( typeof id == 'string' ) {
@@ -56,10 +55,21 @@ function Donatello( id, x, y, w, h ) {
 		Donatello.createElement( x, y, w, h, el );
 		this.dom = el;
 	}
-	else {
+	else if( id != null ) {
 		this.dom = id;
 	}
 }
+
+/**
+ * Utility function to merge properties of 
+ * two objects. Used with map objects.
+ */
+Donatello.merge = function( src, dst ) {
+	for( var prop in src ) {
+		dst[prop] = src[prop];
+	}
+	return dst;
+};
 
 /*
 * Paper is a Donatello object that serves as a container 
@@ -92,23 +102,24 @@ Donatello.decl = function( par, a ) {
  * Must be called after DOM is loaded since we detect
  * features by looking at DOM properties.
  */
-Donatello.setTransform = function() {
+Donatello.getTransform = function() {
+	var transform;
+	var testEl = document.createElement('div');
 	if( Donatello.transform == undefined ) {
-		var transform;
 		// css spec, no browser supports this yet
-		if( typeof document.body.style.transform != 'undefined' ) {
+		if( typeof testEl.style.transform != 'undefined' ) {
 			transform = 'transform';
 		} 
-		else if( typeof document.body.style.webkitTransform != 'undefined' ) {
+		else if( typeof testEl.style.webkitTransform != 'undefined' ) {
 			transform = 'webkitTransform';
 		} 
-		else if( typeof document.body.style.MozTransform != 'undefined' ) {
+		else if( typeof testEl.style.MozTransform != 'undefined' ) {
 			transform = 'MozTransform';
 		} 
-		else if( typeof document.body.style.msTransform != 'undefined' ) {
+		else if( typeof testEl.style.msTransform != 'undefined' ) {
 			transform = 'msTransform';
 		} 
-		else if( typeof document.body.style.OTransform != 'undefined' ) {
+		else if( typeof testEl.style.OTransform != 'undefined' ) {
 			transform = 'OTransform';
 		} 
 		// transforms not supported
@@ -116,6 +127,9 @@ Donatello.setTransform = function() {
 		console.log( 'css transform: ' + transform );
 		Donatello.transform = transform;
 	}
+	else {
+		transform = Donatello.transform;
+	}	
 	// also return transform - used in attr mapping
 	// part of hacky init that should be fixed somehow
 	return transform;
@@ -161,7 +175,7 @@ Donatello.createLinearGradient = function( deg, color1, color2 ) {
 			break;
 	}
 	var retval;
-	switch( Donatello.transform ) {
+	switch( Donatello.getTransform() ) {
 		case 'MozTransform':
 			retval = '-moz-linear-gradient(' + 
 				deg*45 + 'deg,' + color1 + ', ' + color2 + ')';
@@ -196,13 +210,13 @@ Donatello.createLinearGradient = function( deg, color1, color2 ) {
 */
 Donatello.createRadialGradient = function( deg, color1, color2 ) {
 	var retval;
-	switch( Donatello.transform ) {
+	switch( Donatello.getTransform() ) {
 		case 'MozTransform':
 			retval = '-moz-radial-gradient(' + deg + 'deg,' + 
 				color1 + ', ' + color2 + ')';
 			break;
 		default:
-			throw 'Gradients not implemented for ' + Donatello.transform;
+			throw 'Gradients not implemented for ' + Donatello.getTransform();
 	}
 	console.log( 'gradient: ' + retval );
 	return retval;
@@ -217,7 +231,7 @@ Donatello.prototype.rotate = function( deg ) {
 	// not sure if this will cause problems at any point - we may 
 	// need some more sophisticated managment of the list of applied
 	// transforms later on down the road.
-	this.dom.style[ Donatello.transform ] += 'rotate(' + deg + 'deg)';
+	this.dom.style[ Donatello.getTransform() ] += 'rotate(' + deg + 'deg)';
 }
 
 Donatello.prototype.clear = function() {
@@ -375,7 +389,7 @@ Donatello.prototype.pgram = function( x, y, dx, dy, skew, a ) {
 	el.style.borderWidth = a['stroke-width'] + 'px';
 
 	if( skew != null ) {
-		el.style[ Donatello.transform ] += 'skew(' + skew + 'deg)';
+		el.style[ Donatello.getTransform() ] += 'skew(' + skew + 'deg)';
 	}
 	this.dom.appendChild( el );
 	var don = new Donatello( el );
@@ -407,14 +421,7 @@ Donatello.prototype.image = function( x, y, w, h, img, a ) {
 	return don;
 }
 
-/**
-* Draw a straight line.
-* dx/dy are offsets from start, w is stroke width
-*
-* TODO: add end caps - box-radius for rounded,
-* borders for diagonal. also maybe linejoin
-*/
-Donatello.prototype.line = function( x, y, dx, dy, a ) {
+Donatello.Line = function( parent, x, y, dx, dy, a ) {
 	a = Donatello.attrDefaults( a );
 	var w = a['stroke-width']; 
 	var stroke = w;
@@ -439,6 +446,27 @@ Donatello.prototype.line = function( x, y, dx, dy, a ) {
 	el.style.borderTopWidth = stroke + 'px';
 	el.style.borderTopColor = c;
 
+
+/// 
+
+	this.dom = el;
+	this.draw( x, y, dx, dy,len,stroke, a );
+
+
+	// transform origin referenced from border width
+	el.style[ Donatello.getTransform() + 'Origin' ] = '0px 0px';
+
+	parent.dom.appendChild( el );
+
+	// applying styles messes up lines, fix this
+	// dom.attr( a );
+
+};
+Donatello.Line.prototype = new Donatello( null );
+Donatello.Line.prototype.draw = function( x, y, dx, dy, len,stroke, a ) {
+	// TODO: get the drawing related stuff out of the constructor
+	a = Donatello.attrDefaults( this.attrs() );
+
 	// find the angle
 	var rot = Math.asin( Math.abs(dy) / len );
 	// convert to degrees
@@ -456,17 +484,19 @@ Donatello.prototype.line = function( x, y, dx, dy, a ) {
 		rot = 360-rot;
 	}
 
-	el.style[ Donatello.transform ] = 
+	this.dom.style[ Donatello.getTransform() ] = 
 		'rotate(' + rot + 'deg) translate(0px, -' + stroke/2 + 'px)';
-	// transform origin referenced from border width
-	el.style[ Donatello.transform + 'Origin' ] = '0px 0px';
-	this.dom.appendChild( el );
-	var dom = new Donatello( el );
+};
 
-	// applying styles messes up lines, fix this
-	// dom.attr( a );
-
-	return dom;
+/**
+* Draw a straight line.
+* dx/dy are offsets from start, w is stroke width
+*
+* TODO: add end caps - box-radius for rounded,
+* borders for diagonal. also maybe linejoin
+*/
+Donatello.prototype.line = function( x, y, dx, dy, a ) {
+	return new Donatello.Line( this, x, y, dx, dy, a );
 }
 
 /**
@@ -503,13 +533,3 @@ Donatello.attrDefaults = function( a ) {
 	return a;
 };
 
-/**
- * Utility function to merge properties of 
- * two objects. Used with map objects.
- */
-Donatello.merge = function( src, dst ) {
-	for( var prop in src ) {
-		dst[prop] = src[prop];
-	}
-	return dst;
-};
