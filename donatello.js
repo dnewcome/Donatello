@@ -40,6 +40,17 @@ function Donatello( id, x, y, w, h ) {
 		'transform': Donatello.transform
 	}
 
+	// some attributes we want to read a different css value
+	// than we use for writing. e.g. top/offsetTop
+	this.attrReverseMap = Donatello.merge( {
+		'x': 'top'
+	/*
+		'y': 'offsetTop',
+		'w': 'offsetWidth',
+		'h': 'offsetHeight'
+	*/
+	}, this.attrMap );
+
 	if( typeof id == 'string' ) {
 		var el = document.getElementById( id );
 		Donatello.createElement( x, y, w, h, el );
@@ -245,6 +256,20 @@ Donatello.prototype.stop = function( time, attrs ) {
 	this.attr( {'MozTransition':''});
 }
 
+
+
+/**
+* Get a list of all of the attributes
+* according to attribut map
+*/
+Donatello.prototype.attrs = function( obj ) {
+	var retval = {};
+	var mapping = this.attrReverseMap;
+	for( attr in mapping ) {
+		retval[attr] = this.dom.style[mapping[attr]];
+	}
+	return retval;
+}
 
 /**
 * Setting attributes looks for mapped attributes first, then
@@ -478,3 +503,13 @@ Donatello.attrDefaults = function( a ) {
 	return a;
 };
 
+/**
+ * Utility function to merge properties of 
+ * two objects. Used with map objects.
+ */
+Donatello.merge = function( src, dst ) {
+	for( var prop in src ) {
+		dst[prop] = src[prop];
+	}
+	return dst;
+};
