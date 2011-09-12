@@ -16,6 +16,10 @@
 * x/y, w/h - position and size
 */
 function Donatello( id, x, y, w, h ) {
+
+	// the current values used for drawing
+	this.dimensionalProperties = {  };
+
 	// TODO fix hacky initialization
 	// Donatello.setTransform();
 	// if( id != null ) Donatello.setTransform();
@@ -424,22 +428,19 @@ Donatello.prototype.image = function( x, y, w, h, img, a ) {
 Donatello.Line = function( parent, x, y, dx, dy, a ) {
 	a = Donatello.attrDefaults( a );
 	var w = a['stroke-width']; 
-	var stroke = w;
+	this.dimensionalProperties = { 
+		x: x, y: y, dx: dx, dy: dy,
+		'stroke-width': w
+	};
 	var c = a['stroke'];
 	var f = a['fill'];
 	var style = a['stroke-style'];
 
-	var len = Math.sqrt(dx*dx + dy*dy );
 	var el = document.createElement( 'div' );	
 	el.style.position = 'absolute';
 	el.style.top = y + 'px';
 	el.style.left = x + 'px';
 
-	// width is the line length	
-	el.style.width = len + 'px';
-
-	// height is the line width
-	el.style.height = '0px';
 
 	// use attribute map modifications to write attributes
 	// to the object. This was previously hard coded
@@ -450,7 +451,7 @@ Donatello.Line = function( parent, x, y, dx, dy, a ) {
 /// 
 
 	this.dom = el;
-	this.draw( x, y, dx, dy,len,stroke, a );
+	this.draw( a );
 
 
 	// transform origin referenced from border width
@@ -463,9 +464,22 @@ Donatello.Line = function( parent, x, y, dx, dy, a ) {
 
 };
 Donatello.Line.prototype = new Donatello( null );
-Donatello.Line.prototype.draw = function( x, y, dx, dy, len,stroke, a ) {
+Donatello.Line.prototype.draw = function( a ) {
 	// TODO: get the drawing related stuff out of the constructor
+	var x = this.dimensionalProperties.x;
+	var y = this.dimensionalProperties.y;
+	var dx = this.dimensionalProperties.dx;
+	var dy = this.dimensionalProperties.dy;
+	var stroke = this.dimensionalProperties['stroke-width'];
 	a = Donatello.attrDefaults( this.attrs() );
+
+	var len = Math.sqrt(dx*dx + dy*dy );
+
+	// width is the line length	
+	this.dom.style.width = len + 'px';
+
+	// height is the line width
+	this.dom.style.height = '0px';
 
 	// find the angle
 	var rot = Math.asin( Math.abs(dy) / len );
