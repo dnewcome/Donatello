@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+	<!--
+		This is a test intended to show that calculated attributes
+		retrieval is working correctly. Attrs should be logged
+		to the console.
+	-->
+	<script src="../donatello.js" type="text/javascript"></script>
+	<script>
+		/**
+		*/
+		function main() {
+			var paper = Donatello.paper('paper-div', 20, 20, 300, 300 );
+			var rect = paper.rect( 30, 100, 100, 100, {
+				'fill':'green',
+				stroke:'red',
+				'stroke-width':5,
+				r:20
+			});
+			console.log( rect.attrs() );
+		}
+	</script>
+	<style>
+		#paper-div {
+			border: 1px solid black
+		}
+	</style>
+
+</head>
+<body onload='main();'>
+	<div id="paper-div">
+	</div>
+</body>
+</html>
