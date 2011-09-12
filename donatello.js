@@ -20,35 +20,7 @@ function Donatello( id, x, y, w, h ) {
 	// the current values used for drawing
 	this.dimensionalProperties = {};
 
-	/** 
-	* Translation between drawing terminology and CSS property 
-	* names.
-	*/
-	this.attrMap = {
-		fill: 'backgroundColor',
-		stroke: 'borderColor',
-		'stroke-style': 'borderStyle',
-		// todo: we ignore stroke width becuase it requires
-		// the object to be recalculated
-		'stroke-width': null,
-		'x': null,
-		'y': null,
-		'w': null,
-		'h': null,
-		'r': 'borderRadius',
-		'type': null,
-		'children': null,
-		'transform': Donatello.getTransform()
-	}
 
-	// some attributes we want to read a different css value
-	// than we use for writing. e.g. top/offsetTop
-	this.attrReverseMap = Donatello.merge( {
-		'x': 'top',
-		'y': 'left',
-		'w': 'width',
-		'h': 'height'
-	}, this.attrMap );
 
 	if( typeof id == 'string' ) {
 		var el = document.getElementById( id );
@@ -57,43 +29,6 @@ function Donatello( id, x, y, w, h ) {
 	}
 	else if( id != null ) {
 		this.dom = id;
-	}
-}
-
-/**
- * Utility function to merge properties of 
- * two objects. Used with map objects.
- */
-Donatello.merge = function( src, dst ) {
-	for( var prop in src ) {
-		dst[prop] = src[prop];
-	}
-	return dst;
-};
-
-/*
-* Paper is a Donatello object that serves as a container 
-* and has no visible attributes. Essentially a factory
-* method wrapping Donatello constructor for now.
-*  todo; thinking about renaming this to plane 
-*/
-Donatello.paper = function( id, x, y, z, w, h ) {
-	return new Donatello( id, x, y, z, w, h );
-}
-
-/** 
-* create drawing graph declaratively
-* par - parent Donatello object
-* a - attribute object 
-* Only works for rect at this stage.
-*/
-Donatello.decl = function( par, a ) {
-	var don;
-	if( a.type == 'rect' ) {
-		don = par.rect( a.x, a.y, a.w, a.h, a );
-	}
-	for( var i=0; i < a.children.length; i++ ) {
-		Donatello.decl( don, a.children[i] );	
 	}
 }
 
@@ -134,6 +69,74 @@ Donatello.getTransform = function() {
 	// part of hacky init that should be fixed somehow
 	return transform;
 }
+
+/**
+ * Utility function to merge properties of 
+ * two objects. Used with map objects.
+ */
+Donatello.merge = function( src, dst ) {
+	for( var prop in src ) {
+		dst[prop] = src[prop];
+	}
+	return dst;
+};
+
+/** 
+* Translation between drawing terminology and CSS property 
+* names.
+*/
+Donatello.prototype.attrMap = {
+	fill: 'backgroundColor',
+	stroke: 'borderColor',
+	'stroke-style': 'borderStyle',
+	// todo: we ignore stroke width becuase it requires
+	// the object to be recalculated
+	'stroke-width': null,
+	'x': null,
+	'y': null,
+	'w': null,
+	'h': null,
+	'r': 'borderRadius',
+	'type': null,
+	'children': null,
+	'transform': Donatello.getTransform()
+}
+
+// some attributes we want to read a different css value
+// than we use for writing. e.g. top/offsetTop
+Donatello.prototype.attrReverseMap = Donatello.merge( {
+	'x': 'top',
+	'y': 'left',
+	'w': 'width',
+	'h': 'height'
+}, Donatello.prototype.attrMap );
+
+/*
+* Paper is a Donatello object that serves as a container 
+* and has no visible attributes. Essentially a factory
+* method wrapping Donatello constructor for now.
+*  todo; thinking about renaming this to plane 
+*/
+Donatello.paper = function( id, x, y, z, w, h ) {
+	return new Donatello( id, x, y, z, w, h );
+}
+
+/** 
+* create drawing graph declaratively
+* par - parent Donatello object
+* a - attribute object 
+* Only works for rect at this stage.
+*/
+Donatello.decl = function( par, a ) {
+	var don;
+	if( a.type == 'rect' ) {
+		don = par.rect( a.x, a.y, a.w, a.h, a );
+	}
+	for( var i=0; i < a.children.length; i++ ) {
+		Donatello.decl( don, a.children[i] );	
+	}
+}
+
 
 
 /**
