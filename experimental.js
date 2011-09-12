@@ -133,3 +133,38 @@ StackPanel.prototype.add = function( item ) {
 	item.attr( { float:'left',stroke:'blue',position:'relative' } );	
 }
 
+/** 
+* create drawing graph declaratively
+* par - parent Donatello object
+* a - attribute object 
+* Only works for rect at this stage.
+*/
+Donatello.decl = function( par, a ) {
+	var don;
+	if( a.type == 'rect' ) {
+		don = par.rect( a.x, a.y, a.w, a.h, a );
+	}
+	for( var i=0; i < a.children.length; i++ ) {
+		Donatello.decl( don, a.children[i] );	
+	}
+}
+
+/**
+* Internal function for creating the appropriate 
+* radial gradient function
+* TODO: this is incomplete - need to decide on what level of
+* support to provide for radial gradients
+*/
+Donatello.createRadialGradient = function( deg, color1, color2 ) {
+	var retval;
+	switch( Donatello.getTransform() ) {
+		case 'MozTransform':
+			retval = '-moz-radial-gradient(' + deg + 'deg,' + 
+				color1 + ', ' + color2 + ')';
+			break;
+		default:
+			throw 'Gradients not implemented for ' + Donatello.getTransform();
+	}
+	console.log( 'gradient: ' + retval );
+	return retval;
+}

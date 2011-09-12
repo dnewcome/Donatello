@@ -17,10 +17,12 @@
 */
 function Donatello( id, x, y, w, h ) {
 
-	// the current values used for drawing
+	// properties that require a redraw 
 	this.dimensionalProperties = {};
 
-
+	// properties that can be set any time 
+	// without redrawing.
+	this.cosmeticProperties = {};
 
 	if( typeof id == 'string' ) {
 		var el = document.getElementById( id );
@@ -89,17 +91,24 @@ Donatello.prototype.attrMap = {
 	fill: 'backgroundColor',
 	stroke: 'borderColor',
 	'stroke-style': 'borderStyle',
-	// todo: we ignore stroke width becuase it requires
-	// the object to be recalculated
+	'r': 'borderRadius',
+	// type and children are not applied as styles
+	// so we ignore them by setting to null
+	'type': null,
+	'children': null,
+	'transform': Donatello.getTransform()
+}
+
+/**
+* Translation map for properties that require 
+* redraw of shapes.
+*/
+Donatello.prototype.dimensionalAttrMap = {
 	'stroke-width': null,
 	'x': null,
 	'y': null,
 	'w': null,
-	'h': null,
-	'r': 'borderRadius',
-	'type': null,
-	'children': null,
-	'transform': Donatello.getTransform()
+	'h': null
 }
 
 // some attributes we want to read a different css value
@@ -120,24 +129,6 @@ Donatello.prototype.attrReverseMap = Donatello.merge( {
 Donatello.paper = function( id, x, y, z, w, h ) {
 	return new Donatello( id, x, y, z, w, h );
 }
-
-/** 
-* create drawing graph declaratively
-* par - parent Donatello object
-* a - attribute object 
-* Only works for rect at this stage.
-*/
-Donatello.decl = function( par, a ) {
-	var don;
-	if( a.type == 'rect' ) {
-		don = par.rect( a.x, a.y, a.w, a.h, a );
-	}
-	for( var i=0; i < a.children.length; i++ ) {
-		Donatello.decl( don, a.children[i] );	
-	}
-}
-
-
 
 /**
 * Internal function for creating the appropriate 
@@ -204,26 +195,6 @@ Donatello.createLinearGradient = function( deg, color1, color2 ) {
 	return retval;
 }
 
-
-/**
-* Internal function for creating the appropriate 
-* radial gradient function
-* TODO: this is incomplete - need to decide on what level of
-* support to provide for radial gradients
-*/
-Donatello.createRadialGradient = function( deg, color1, color2 ) {
-	var retval;
-	switch( Donatello.getTransform() ) {
-		case 'MozTransform':
-			retval = '-moz-radial-gradient(' + deg + 'deg,' + 
-				color1 + ', ' + color2 + ')';
-			break;
-		default:
-			throw 'Gradients not implemented for ' + Donatello.getTransform();
-	}
-	console.log( 'gradient: ' + retval );
-	return retval;
-}
 
 /**
  * Transformation methods that apply to all shapes
@@ -453,6 +424,9 @@ Donatello.Line = function( parent, x, y, dx, dy, a ) {
 
 };
 Donatello.Line.prototype = new Donatello( null );
+Donatello.Line.prototype.setDimensionalAttr = function( a ) {
+	Donatello.merge( a, this.dimensionalProperties );
+}
 Donatello.Line.prototype.draw = function( a ) {
 	var x = this.dimensionalProperties.x;
 	var y = this.dimensionalProperties.y;
