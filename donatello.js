@@ -18,7 +18,7 @@
 function Donatello( id, x, y, w, h ) {
 
 	// the current values used for drawing
-	this.dimensionalProperties = {  };
+	this.dimensionalProperties = {};
 
 	// TODO fix hacky initialization
 	// Donatello.setTransform();
@@ -436,19 +436,13 @@ Donatello.Line = function( parent, x, y, dx, dy, a ) {
 	var f = a['fill'];
 	var style = a['stroke-style'];
 
-	var el = document.createElement( 'div' );	
-	el.style.position = 'absolute';
-	el.style.top = y + 'px';
-	el.style.left = x + 'px';
-
+	var el = Donatello.createElement( x, y, 0, 0, 'div' );
 
 	// use attribute map modifications to write attributes
 	// to the object. This was previously hard coded
 	this.attrMap['stroke-width'] = 'borderTopWidth';
 	this.attrMap['stroke-style'] = 'borderTopStyle';
 	this.attrMap['stroke'] = 'borderTopColor';
-
-/// 
 
 	this.dom = el;
 	this.draw( a );
@@ -459,13 +453,11 @@ Donatello.Line = function( parent, x, y, dx, dy, a ) {
 
 	parent.dom.appendChild( el );
 
-	// applying styles messes up lines, fix this
 	this.attr( a );
 
 };
 Donatello.Line.prototype = new Donatello( null );
 Donatello.Line.prototype.draw = function( a ) {
-	// TODO: get the drawing related stuff out of the constructor
 	var x = this.dimensionalProperties.x;
 	var y = this.dimensionalProperties.y;
 	var dx = this.dimensionalProperties.dx;
