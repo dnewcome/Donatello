@@ -20,10 +20,6 @@ function Donatello( id, x, y, w, h ) {
 	// the current values used for drawing
 	this.dimensionalProperties = {};
 
-	// TODO fix hacky initialization
-	// Donatello.setTransform();
-	// if( id != null ) Donatello.setTransform();
-
 	/** 
 	* Translation between drawing terminology and CSS property 
 	* names.
