@@ -293,7 +293,7 @@ Donatello.prototype.attr = function( obj ) {
 	var mapping = this.attrMap;
 	for( attr in obj ) {
 		if( mapping[attr] != null ){
-			if( attr == 'r' ) {
+			if( attr == 'r' || attr == 'stroke-width' ) {
 				// special case to add 'px' to radius specification
 				// TODO: see about simplifying this stuff
 				this.dom.style[mapping[attr]] = obj[attr] + 'px';
@@ -441,11 +441,11 @@ Donatello.Line = function( parent, x, y, dx, dy, a ) {
 	// height is the line width
 	el.style.height = '0px';
 
-	// setting both borders makes line too thick
-	el.style.borderTopStyle = style;
-	el.style.borderTopWidth = stroke + 'px';
-	el.style.borderTopColor = c;
-
+	// use attribute map modifications to write attributes
+	// to the object. This was previously hard coded
+	this.attrMap['stroke-width'] = 'borderTopWidth';
+	this.attrMap['stroke-style'] = 'borderTopStyle';
+	this.attrMap['stroke'] = 'borderTopColor';
 
 /// 
 
@@ -459,7 +459,7 @@ Donatello.Line = function( parent, x, y, dx, dy, a ) {
 	parent.dom.appendChild( el );
 
 	// applying styles messes up lines, fix this
-	// dom.attr( a );
+	this.attr( a );
 
 };
 Donatello.Line.prototype = new Donatello( null );
