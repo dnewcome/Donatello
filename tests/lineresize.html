@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+	<script src="../donatello.js" type="text/javascript"></script>
+	<script>
+		var line;
+
+		/**
+		* Kitchen sink drawing method for smoke test.
+		*/
+		function main() {
+			var paper = Donatello.paper('paper-div', 20, 20, 300, 300 );
+
+			// example of a nested set of objects using declarative json
+			// initialization
+			line = paper.line( 20, 20, 50, 50, { 
+				stroke:'red',
+				'stroke-width':5
+			});
+		}
+	
+		function resize( evt ) {
+			console.log( evt.clientX );	
+			line.setDimensionalAttr( { dx: evt.clientX - 20, dy: evt.clientY - 20 } );
+			line.draw();
+		}
+
+	</script>
+	<style>
+		#paper-div {
+			border: 1px solid black
+		}
+	</style>
+
+</head>
+<body onload='main();' onclick='resize(event);' onmousemove='resize(event);'>
+	<div id="paper-div">
+	</div>
+</body>
+</html>
