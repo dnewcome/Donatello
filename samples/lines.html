@@ -16,7 +16,6 @@
 				var y1 = Math.sin( i*Math.PI/8 )*r1;
 				var x2 = Math.cos( i*Math.PI/8 )*r2;
 				var y2 = Math.sin( i*Math.PI/8 )*r2;
-				console.log( 'iteration ' + i + ' ' + (x2-x1) + ' ' + (y2-y1) );
 				var line = paper.line( 250+x1, 250+y1, x2-x1, y2-y1,
 				 { 
 					'stroke-width': 4*i,
@@ -30,7 +29,6 @@
 				var y1 = Math.sin( i*Math.PI/8 )*r1;
 				var x2 = Math.cos( i*Math.PI/8 )*r2;
 				var y2 = Math.sin( i*Math.PI/8 )*r2;
-				console.log( 'iteration ' + i + ' ' + (x2-x1) + ' ' + (y2-y1) );
 				var line = paper.circle( 250+x1, 250+y1, 2); 
 			}
 		}
