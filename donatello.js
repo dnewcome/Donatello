@@ -365,10 +365,7 @@ Donatello.prototype.ellipse = function( x, y, rx, ry, a ) {
 
 	var el = Donatello.createElement( x-rx-s, y-ry-s, 2*rx, 2*ry, 'div');
 	el.style.borderRadius = ( rx + s ) + 'px / ' + ( ry + s ) + 'px';
-	el.style.borderStyle = style;
-	el.style.borderColor = c;
 	el.style.borderWidth = s + 'px';
-	el.style.backgroundColor = f;
 	
 	this.dom.appendChild( el );
 	var don = new Donatello( el ); 
