@@ -168,3 +168,27 @@ Donatello.createRadialGradient = function( deg, color1, color2 ) {
 	console.log( 'gradient: ' + retval );
 	return retval;
 }
+
+/**
+* Animation - 
+*
+* Time given in seconds
+* Easing is always in-out
+*/
+Donatello.prototype.animate = function( time, attrs ) {
+	// TODO: only works in firefox right now
+	var me = this;
+	this.attr( {'MozTransition':'all ' + time + 's ease-in 0s'});
+	// in order for the animation to work, we have to set
+	// moz-transition first, then later in setTimout set the props
+	setTimeout( function() { me.attr( attrs ) }, 0 );
+	return this.dom;
+}
+
+/*
+* Stop the current animation
+*/
+Donatello.prototype.stop = function( time, attrs ) {
+	// TODO: this doesn't work how it should
+	this.attr( {'MozTransition':''});
+}

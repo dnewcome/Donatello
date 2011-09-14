@@ -40,11 +40,6 @@ Donatello.Line = function( parent, x, y, dx, dy, a ) {
 
 Donatello.Line.prototype = new Donatello( null );
 
-Donatello.Line.prototype.setDimensionalAttr = function( a ) {
-	Donatello.merge( a, this.properties );
-	this.draw();
-}
-
 Donatello.Line.prototype.draw = function( a ) {
 	var x = this.properties.x;
 	var y = this.properties.y;

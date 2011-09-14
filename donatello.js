@@ -100,6 +100,14 @@ Donatello.prototype.attrMap = {
 }
 
 
+/**
+* Each type of donatello shape needs to impelement draw
+*/
+Donatello.prototype.draw = function() {
+	// TODO: insert this exception to watch for unimplemented draw()
+	// throw "draw not implemented for shape";
+};
+
 /*
 * Paper is a Donatello object that serves as a container 
 * and has no visible attributes. Essentially a factory
@@ -203,30 +211,6 @@ Donatello.prototype.node = function() {
 }
 
 /**
-* Time given in seconds
-* Easing is always in-out
-*/
-Donatello.prototype.animate = function( time, attrs ) {
-	// TODO: only works in firefox right now
-	var me = this;
-	this.attr( {'MozTransition':'all ' + time + 's ease-in 0s'});
-	// in order for the animation to work, we have to set
-	// moz-transition first, then later in setTimout set the props
-	setTimeout( function() { me.attr( attrs ) }, 0 );
-	return this.dom;
-}
-
-/*
-* Stop the current animation
-*/
-Donatello.prototype.stop = function( time, attrs ) {
-	// TODO: this doesn't work how it should
-	this.attr( {'MozTransition':''});
-}
-
-
-
-/**
 * Get a list of all of the attributes
 * according to attribute map
 */
@@ -272,6 +256,7 @@ Donatello.prototype.attr = function( obj ) {
 			this.dom.style[attr] = obj[attr];
 		}
 	}
+	this.draw();
 	return this;
 }
 
