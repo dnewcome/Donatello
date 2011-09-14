@@ -18,7 +18,7 @@
 function Donatello( id, x, y, w, h ) {
 
 	// properties that require a redraw 
-	this.dimensionalProperties = {};
+	this.properties = {};
 
 	// properties that can be set any time 
 	// without redrawing.
@@ -99,26 +99,6 @@ Donatello.prototype.attrMap = {
 	'transform': Donatello.getTransform()
 }
 
-/**
-* Translation map for properties that require 
-* redraw of shapes.
-*/
-Donatello.prototype.dimensionalAttrMap = {
-	'stroke-width': null,
-	'x': null,
-	'y': null,
-	'w': null,
-	'h': null
-}
-
-// some attributes we want to read a different css value
-// than we use for writing. e.g. top/offsetTop
-Donatello.prototype.attrReverseMap = Donatello.merge( {
-	'x': 'top',
-	'y': 'left',
-	'w': 'width',
-	'h': 'height'
-}, Donatello.prototype.attrMap );
 
 /*
 * Paper is a Donatello object that serves as a container 
@@ -248,24 +228,24 @@ Donatello.prototype.stop = function( time, attrs ) {
 
 /**
 * Get a list of all of the attributes
-* according to attribut map
+* according to attribute map
 */
-Donatello.prototype.attrs = function( obj ) {
-	var retval = {};
-	var mapping = this.attrReverseMap;
-	for( attr in mapping ) {
-		retval[attr] = this.dom.style[mapping[attr]];
-	}
-	return retval;
+Donatello.prototype.attrs = function() {
+	return this.properties;
 }
 
 /**
 * Setting attributes looks for mapped attributes first, then
 * passes attribute through as a CSS attribute.
+*
+* We merge given properties into the properties map
+* TODO: this could be lots simpler. 
 */
 Donatello.prototype.attr = function( obj ) {
+	Donatello.merge( obj, this.properties );
 	var mapping = this.attrMap;
 	for( attr in obj ) {
+		// apply mapped property
 		if( mapping[attr] != null ){
 			if( attr == 'r' || attr == 'stroke-width' ) {
 				// special case to add 'px' to radius specification
@@ -276,6 +256,7 @@ Donatello.prototype.attr = function( obj ) {
 				this.dom.style[mapping[attr]] = obj[attr];
 			}
 		} 
+		// apply property as css otherwise
 		else if( 
 			// ignore attributes that we ordinarily set using
 			// positional arguments.
@@ -390,89 +371,6 @@ Donatello.prototype.image = function( x, y, w, h, img, a ) {
 	var don = new Donatello( el );
 	don.attr( a );
 	return don;
-}
-
-Donatello.Line = function( parent, x, y, dx, dy, a ) {
-	a = Donatello.attrDefaults( a );
-	var w = a['stroke-width']; 
-	this.dimensionalProperties = { 
-		x: x, y: y, dx: dx, dy: dy,
-		'stroke-width': w
-	};
-	var c = a['stroke'];
-	var f = a['fill'];
-	var style = a['stroke-style'];
-
-	var el = Donatello.createElement( x, y, 0, 0, 'div' );
-
-	// use attribute map modifications to write attributes
-	// to the object. This was previously hard coded
-	this.attrMap['stroke-width'] = 'borderTopWidth';
-	this.attrMap['stroke-style'] = 'borderTopStyle';
-	this.attrMap['stroke'] = 'borderTopColor';
-
-	this.dom = el;
-	this.draw( a );
-
-
-	// transform origin referenced from border width
-	el.style[ Donatello.getTransform() + 'Origin' ] = '0px 0px';
-
-	parent.dom.appendChild( el );
-
-	this.attr( a );
-
-};
-Donatello.Line.prototype = new Donatello( null );
-Donatello.Line.prototype.setDimensionalAttr = function( a ) {
-	Donatello.merge( a, this.dimensionalProperties );
-}
-Donatello.Line.prototype.draw = function( a ) {
-	var x = this.dimensionalProperties.x;
-	var y = this.dimensionalProperties.y;
-	var dx = this.dimensionalProperties.dx;
-	var dy = this.dimensionalProperties.dy;
-	var stroke = this.dimensionalProperties['stroke-width'];
-	a = Donatello.attrDefaults( this.attrs() );
-
-	var len = Math.sqrt(dx*dx + dy*dy );
-
-	// width is the line length	
-	this.dom.style.width = len + 'px';
-
-	// height is the line width
-	this.dom.style.height = '0px';
-
-	// find the angle
-	var rot = Math.asin( Math.abs(dy) / len );
-	// convert to degrees
-	rot = rot * (180/Math.PI);
-
-	// we handle other orientations by adjusting 
-	// rotation according to quadrant 
-	if( dx < 0 && dy >= 0 ) {
-		rot = 180-rot;
-	}
-	else if( dx < 0 && dy <  0 ) {
-		rot = 180+rot;
-	}
-	else if( dx >= 0 && dy < 0 ) {
-		rot = 360-rot;
-	}
-
-	this.dom.style[ Donatello.getTransform() ] = 
-		'rotate(' + rot + 'deg) translate(0px, -' + stroke/2 + 'px)';
-};
-
-/**
-* Draw a straight line.
-* dx/dy are offsets from start, w is stroke width
-*
-* TODO: add end caps - box-radius for rounded,
-* borders for diagonal. also maybe linejoin
-*/
-Donatello.prototype.line = function( x, y, dx, dy, a ) {
-	return new Donatello.Line( this, x, y, dx, dy, a );
 }
 
 /**
