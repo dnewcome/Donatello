@@ -46,7 +46,6 @@ Donatello.Line.prototype.draw = function( a ) {
 	var dx = this.properties.dx;
 	var dy = this.properties.dy;
 	var stroke = this.properties['stroke-width'];
-	a = Donatello.attrDefaults( this.attrs() );
 
 	var len = Math.sqrt(dx*dx + dy*dy );
 

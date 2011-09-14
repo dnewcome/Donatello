@@ -214,9 +214,11 @@ Donatello.prototype.node = function() {
 * Get a list of all of the attributes
 * according to attribute map
 */
+/*
 Donatello.prototype.attrs = function() {
 	return this.properties;
 }
+*/
 
 /**
 * Setting attributes looks for mapped attributes first, then
@@ -226,6 +228,8 @@ Donatello.prototype.attrs = function() {
 * TODO: this could be lots simpler. 
 */
 Donatello.prototype.attr = function( obj ) {
+	if( obj == 'undefined' ) return this.properties;
+
 	Donatello.merge( obj, this.properties );
 	var mapping = this.attrMap;
 	for( attr in obj ) {
@@ -264,29 +268,6 @@ Donatello.prototype.attr = function( obj ) {
 /**
 * Drawing methods
 */
-
-/**
- * Draw a circle
- * center coordinates, radius, attributes 
- */
-Donatello.prototype.circle = function( x, y, r, a ) {
-	a = Donatello.attrDefaults( a );
-	var s = a['stroke-width'];
-	var c = a['stroke'];
-	var f = a['fill'];
-	var style = a['stroke-style'];
-	var el = Donatello.createElement( x-r-s, y-r-s, 2*r, 2*r, 'div');
-	el.style.borderRadius = r + s + 'px';
-	el.style.borderStyle = style;
-	el.style.borderColor = c;
-	el.style.backgroundColor = f;
-	el.style.borderWidth = s  + 'px';
-
-	this.dom.appendChild( el );
-	var don = new Donatello( el ); 
-	don.attr( a );
-	return don;
-}
 
 /**
  * Ellipse is similar to circle, should consolidate
