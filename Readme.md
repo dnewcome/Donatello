@@ -5,12 +5,12 @@ Donatello is a pure-CSS drawing library for the browser.
 The idea is that since everything is just DOM+CSS, things like event handlers and drag/drop 
 should work without any special techniques. 
 
-## Goals
+### Goals
 
 Provide a familiar drawing API similar to Raphael and other drawing
 libraries.
 
-## Non-goals
+### Non-goals
 
 Donatello does not seek to replicate functionality found in other
 common JS libraries, particularly drag and drop and animation 
