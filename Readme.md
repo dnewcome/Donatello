@@ -91,6 +91,15 @@ looks like this:
 Keep in mind that everything seen in the clock rendering is a simple DOM element. No canvas
 or SVG is being used at all.
 
+We can begin to draw more complex shapes using the primitives that are defined already in 
+Donatello. I have created a quadratic bezier curve out of line segments. The following image
+shows the result of using 30 discrete elements. The end points and control
+points are shown in black, and the points on the polygon are shown in yellow and red. As 
+you can see, in Firefox with antialiasing the curve looks nearly perfect 
+even at this coarse element count. 
+
+![Ellipses geometric image](https://github.com/dnewcome/Donatello/raw/master/samples/ellipses.png)
+
 Donatello objects are just DOM elements underneath, so adding event handlers 
 or drag/drop should be a cinch. For example, using jQuery we should be able to 
 attach a click handler like so:
