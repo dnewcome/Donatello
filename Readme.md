@@ -98,7 +98,7 @@ points are shown in black, and the points on the polygon are shown in yellow and
 you can see, in Firefox with antialiasing the curve looks nearly perfect 
 even at this coarse element count. 
 
-![Ellipses geometric image](https://github.com/dnewcome/Donatello/raw/master/samples/ellipses.png)
+![Bezier curve geometric image](https://github.com/dnewcome/Donatello/raw/master/samples/bezier.png)
 
 Donatello objects are just DOM elements underneath, so adding event handlers 
 or drag/drop should be a cinch. For example, using jQuery we should be able to 
