@@ -18,7 +18,7 @@ faculties.
 
 # Usage
 
-Converting a DOM element into a drawing surface for a is done like this:
+Converting a DOM element into a drawing surface for is done like this:
 
     var paper = Donatello.paper('paper-div', 20, 20, 500, 500 );
 
