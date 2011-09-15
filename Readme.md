@@ -51,8 +51,45 @@ Which produces the following:
 
 ![Ellipses geometric image](https://github.com/dnewcome/Donatello/raw/master/samples/ellipses.png)
 
-Donatello objects are just DOM elements underneath, so adding event handlers and jQuery
-animations or drag/drop should be a cinch. For example, using jQuery we should be able to 
+Using a similar idea, we can arrange lines to mark the divisions on a clock face. 
+
+    for( var i=0; i < 60; i ++ ) {
+        var stroke;
+        if( i%5 == 0 ) {
+        stroke = 4;
+        r1 = 125;
+        }
+            else {
+            stroke = 2;
+            r1 = 135;
+        }
+        var x1 = Math.cos( i*Math.PI/30 )*r1;
+        var y1 = Math.sin( i*Math.PI/30 )*r1;
+        var x2 = Math.cos( i*Math.PI/30 )*r2;
+        var y2 = Math.sin( i*Math.PI/30 )*r2;
+	...
+    }
+
+Once we have calculated the line endpoints, lengths and thicknesses mathematically we
+use Donatello to easily plot the lines using the computed values offset against the 
+center point of the drawing surface:
+
+    var line = paper.line( 250+x1, 250+y1, x2-x1, y2-y1,
+    { 
+        'stroke-width': stroke,
+        'stroke': colors[0],
+        'stroke-style': 'solid'
+    });
+
+Firefox
+supports CSS border gradients so the clock bezel is styled with a
+gradient that currently dependent on Firefox. The result when rendered in Firefox
+looks like this:
+
+![Clock image](https://github.com/dnewcome/Donatello/raw/master/samples/clock.png)
+
+Donatello objects are just DOM elements underneath, so adding event handlers 
+or drag/drop should be a cinch. For example, using jQuery we should be able to 
 attach a click handler like so:
 
     $( ellipse.node() ).bind( 
@@ -66,15 +103,9 @@ attach a click handler like so:
 Donatello is intended to show what can be done natively using only CSS, and there are many inconsistencies that I'm 
 still working out and/or don't know about.
 
-There are some known subtle drawing bugs present that I haven't had the time to fix yet. Wide stroke widths cause errors
-in lines where the angle of the line will not be correct given the dx/dy. Stroke widths cause the overall shape to
+Stroke widths currently cause the overall shape to
 increase in size outwardly, rather than splitting the difference in line width like most SVG drawing tools. This could
 lead to some surprising results if one were to directly port code from another library to Donatello.
-
-Another big limitation is that trying to modify the stroke width after the shape has already been drawn will cause 
-display bugs and inconsistencies. The reason for this is that the stroke width is used in the calculations for drawing
-the DOM element and applying its CSS, so in order to change the stroke, the shape should be redrawn. Currently using 
-.attr() does not trigger a redraw like it should.
 
 # Status
 
@@ -86,12 +117,12 @@ want to be too dogmatic. I'm still thinking about making the interface more CSS-
 
 # Future work
 
-API support for setting properties after drawing
-Regular polygon
-grouping, clipping
-Bezier curves
-bounding box, click/touch area calculations
-arcs, paths
+- Regular polygon
+- grouping, clipping
+- Bezier curves
+- bounding box, click/touch area calculations
+- arcs, paths
 
 # License
 
+Copyright 2011, Dan Newcome. Provided under the MIT license. See the file LICENSE for details.
