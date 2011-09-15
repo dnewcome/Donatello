@@ -5,12 +5,12 @@ Donatello is a pure-CSS drawing library for the browser.
 The idea is that since everything is just DOM+CSS, things like event handlers and drag/drop 
 should work without any special techniques. 
 
-h2 Goals
+## Goals
 
 Provide a familiar drawing API similar to Raphael and other drawing
 libraries.
 
-h2 Non-goals
+## Non-goals
 
 Donatello does not seek to replicate functionality found in other
 common JS libraries, particularly drag and drop and animation 
@@ -21,10 +21,9 @@ faculties.
 Converting a DOM element into a drawing surface for a is done like this:
 
     var paper = Donatello.paper('paper-div', 20, 20, 500, 500 );
-    paper.attr( { fill: 'black' } );
 
 The div with ID 'paper-div' is converted into a drawing surface. Then we can draw an ellipse
-on the surface like this:
+at the center of the surface like this:
 
     var ellipse = paper.ellipse( 250, 250, 120, 75, { 
         'stroke-width': 4,
