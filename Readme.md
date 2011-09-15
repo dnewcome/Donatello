@@ -88,6 +88,9 @@ looks like this:
 
 ![Clock image](https://github.com/dnewcome/Donatello/raw/master/samples/clock.png)
 
+Keep in mind that everything seen in the clock rendering is a simple DOM element. No canvas
+or SVG is being used at all.
+
 Donatello objects are just DOM elements underneath, so adding event handlers 
 or drag/drop should be a cinch. For example, using jQuery we should be able to 
 attach a click handler like so:
