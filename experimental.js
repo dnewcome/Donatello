@@ -6,53 +6,6 @@
 * be able to do this all in CSS.
 */
 
-/**
- * Arc works by drawing a circle and a rectangular clipping 
- * region. The arc length determines the skew and position of 
- * the clipping region.
- *
- * for arcs > 90deg we'll have to use more arc regions.
- *
- */
-Donatello.prototype.arc = function( x, y, r, s, deg ) {
-	// clipping region
-	if( deg < 90 ) {
-		var clipEl = Donatello.createElement( x-r, y-r, 2*r+s, 2*r+s, 'div');
-	}
-	else {
-		var clipEl = Donatello.createElement( x-r, y-r, 2*r+s, 2*r+s, 'div');
-	}
-	
-	clipEl.style.border = '1px solid black';
-	clipEl.style.overflow = 'hidden';
-	// clipEl.style[ Donatello.transform ]= 'skew(30deg)rotate(15deg)';
-	clipEl.style[ Donatello.transform ]= 'skew(' + (90-deg) +'deg)';
-	clipEl.style[ Donatello.transform + 'Origin' ]= '0 0';
-	this.dom.appendChild( clipEl );
-
-	// circular drawing region 
-	/*
-	var el = Donatello.createElement( -r, -r, 2*r, 2*r, 'div');
-	el.style.borderRadius = r + 'px';
-	el.style.border = '3px solid black';
-	*/
-	var el = this.circle( 0, 0, r, s ).dom;
-	var el2 = this.circle( 0, 0, r, s ).dom;
-	var el3 = this.circle( 0, 0, r, s ).dom;
-	var el4 = this.circle( 0, 0, r, s ).dom;
-	// need to compensate for transforms made by clipping region 
-	el.style[ Donatello.transform ]= 'skew(' + -(90-deg) + 'deg)';
-	el2.style[ Donatello.transform ]= 'skew(' + -(90-deg) + 'deg)';
-	el3.style[ Donatello.transform ]= 'skew(' + -(90-deg) + 'deg)';
-	el4.style[ Donatello.transform ]= 'skew(' + -(90-deg) + 'deg)';
-	
-	// visible drawing region is a child of the clipping region 
-	clipEl.appendChild( el );
-	clipEl.appendChild( el2 );
-	clipEl.appendChild( el3 );
-	clipEl.appendChild( el4 );
-	return new Donatello( el );
-}
 
 /**
 * path creates an html canvas element
