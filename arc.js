@@ -22,7 +22,10 @@ Donatello.Arc = function( parent, x, y, r, t1, t2, a ) {
 	var deg = t2-t1;
 	// four circles and a clipping region
 	var clip = Donatello.createElement( x-r-s, y-r-s, 2*r, 2*r, 'div');
-	// clip.style.border = 'solid 1px orange';
+
+	// make clipping visible for debugging and to better understand
+	// the technique
+	//clip.style.border = 'solid 1px orange';
 	var c1 = Donatello.createElement( x-r-s, y-r-s, 2*r, 2*r, 'div');
 	var c2 = Donatello.createElement( x-r-s, y-r-s, 2*r, 2*r, 'div');
 	var c3 = Donatello.createElement( x-r-s, y-r-s, 2*r, 2*r, 'div');
@@ -32,14 +35,14 @@ Donatello.Arc = function( parent, x, y, r, t1, t2, a ) {
 	clip.appendChild( c3 );
 	clip.appendChild( c4 );
 
-	clip.style[ Donatello.transform ]= 'skew(' + (90-deg) +'deg)';
+	//clip.style[ Donatello.transform ]= 'skew(' + (90-deg) +'deg)';
 	clip.style[ Donatello.transform + 'Origin' ]= '100% 100%';
 
 	parent.dom.appendChild( clip );
 	this.dom = clip;
 	// attr calls draw ...
 	// this.attr( a );
-	this.draw( a );
+	this.draw( t2 );
 }
 Donatello.Arc.prototype = new Donatello( null );
 
@@ -47,27 +50,26 @@ Donatello.prototype.arc = function( x, y, r, t1, t2, a ) {
 	return new Donatello.Arc( this, x, y, r, t1, t2, a );
 };
 
-Donatello.Arc.prototype.draw = function() {
-	var angle = 290;
+Donatello.Arc.prototype.draw = function( t2 ) {
+	var angle = t2-this.properties.t1;
 	if( angle < 90 ) {
 		this.dom.style.overflow = 'hidden';
 		this.dom.style[ Donatello.transform ]= 'skew(' + (90-angle) +'deg)';
 	}
 	else {
 		this.dom.style.overflow = 'visible';
+		this.dom.style[ Donatello.transform ]= 'skew(0deg)';
 	}
 
 	// TODO: some of this doesn't belong here
 	// we don't have to recalculate when color changes
 	var r = this.properties.r;
-	console.log('drawing with radius ' + r );
 	var s = this.properties['stroke-width'];
 	var c = this.properties.stroke;
 	var f = this.properties.fill;
 	var style = this.properties['stroke-style'];
 
 	function setprops( el, ang ) {
-		console.log(angle);
 		el.style.borderRadius = r + s + 'px';
 		el.style.borderWidth = s  + 'px';
 

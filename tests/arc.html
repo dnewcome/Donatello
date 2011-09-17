@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+	<script src="../donatello.js" type="text/javascript"></script>
+	<script src="../arc.js" type="text/javascript"></script>
+ 	<script>
+		/**
+		*/
+		var arc; 
+		function main() {
+			var paper = Donatello.paper('paper-div', 20, 20, 600, 600 );
+			arc = paper.arc( 100, 100, 50, 0, 150, {
+				stroke:'red',
+				'stroke-width':20
+			});
+		}
+		function resize( evt ) {
+			arc.draw( evt.clientX%360 );
+		}
+	</script>
+	<style>
+		#paper-div {
+			border: 1px solid black
+		}
+	</style>
+
+</head>
+<body onload='main();' onmousemove='resize(event);'>
+<body onload='main();'>
+	<div id="paper-div">
+	</div>
+</body>
+</html>
