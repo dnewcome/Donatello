@@ -280,7 +280,19 @@ Donatello.prototype.attr = function( obj ) {
 			attr != 'type' && 
 			attr != 'children' 
 		) {
-			this.dom.style[attr] = obj[attr];
+			// TODO: thinking about using a function override for 
+			// individual elements in a composite shape. This works only
+			// if we have a set of elements that we want to apply the same
+			// styles to in every case.
+			if( typeof this.styleableElements != 'undefined' ) {
+				for( var i=0; i < this.styleableElements.length; i++ ) {
+					console.log('setting ' + attr + ' to ' + obj[attr] );
+					this.styleableElements[i].style[attr] = obj[attr];
+				}
+			}
+			else {
+				this.dom.style[attr] = obj[attr];
+			}
 		}
 	}
 	this.draw();

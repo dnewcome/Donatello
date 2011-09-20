@@ -35,6 +35,8 @@ Donatello.Arc = function( parent, x, y, r, t1, t2, a ) {
 	clip.appendChild( c3 );
 	clip.appendChild( c4 );
 
+	this.styleableElements = [ c1, c2, c3, c4 ];
+
 	//clip.style[ Donatello.transform ]= 'skew(' + (90-deg) +'deg)';
 	clip.style[ Donatello.transform + 'Origin' ]= '100% 100%';
 
