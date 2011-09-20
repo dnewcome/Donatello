@@ -292,26 +292,6 @@ Donatello.prototype.attr = function( obj ) {
 * Drawing methods
 */
 
-/**
- * Ellipse is similar to circle, should consolidate
- * xy position, xy radius, stroke width
- */
-Donatello.prototype.ellipse = function( x, y, rx, ry, a ) {
-	a = Donatello.attrDefaults( a );
-	var s = a['stroke-width'];
-	var c = a['stroke'];
-	var f = a['fill'];
-	var style = a['stroke-style'];
-
-	var el = Donatello.createElement( x-rx-s, y-ry-s, 2*rx, 2*ry, 'div');
-	el.style.borderRadius = ( rx + s ) + 'px / ' + ( ry + s ) + 'px';
-	el.style.borderWidth = s + 'px';
-	
-	this.dom.appendChild( el );
-	var don = new Donatello( el ); 
-	don.attr( a );
-	return don; 
-}
 
 /**
 *  Draw a rectangular region to the scene.
