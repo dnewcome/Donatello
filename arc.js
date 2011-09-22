@@ -21,11 +21,11 @@ Donatello.Arc = function( parent, x, y, r, t1, t2, a ) {
 
 	var deg = t2;
 	// four circles and a clipping region
-	var clip = Donatello.createElement( x-r-s, y-r-s, 2*r, 2*r, 'div');
+	var clip = Donatello.createElement( x-2*r, y-2*r, 2*r, 2*r, 'div');
 
 	// make clipping visible for debugging and to better understand
 	// the technique
-	clip.style.border = '1px solid orange';
+	// clip.style.border = '1px solid orange';
 
 	var c1 = Donatello.createElement( x-r-s, y-r-s, 2*r, 2*r, 'div');
 	var c2 = Donatello.createElement( x-r-s, y-r-s, 2*r, 2*r, 'div');
@@ -38,7 +38,6 @@ Donatello.Arc = function( parent, x, y, r, t1, t2, a ) {
 
 	this.styleableElements = [ c1, c2, c3, c4 ];
 
-	//clip.style[ Donatello.transform ]= 'skew(' + (90-deg) +'deg)';
 	clip.style[ Donatello.transform + 'Origin' ]= '100% 100%';
 
 	parent.dom.appendChild( clip );
@@ -59,11 +58,18 @@ Donatello.Arc.prototype.draw = function( t2 ) {
 	// order of skew/rotation important
 	if( angle < 90 ) {
 		this.dom.style.overflow = 'hidden';
-		this.dom.style[ Donatello.transform ]= 'rotate(' + t1 + 'deg) skew(' + (90-angle) +'deg)';
+		this.dom.style[ Donatello.transform ] = 
+			// offset rotation by 180deg to conform to svg angle conventions
+			'rotate(' + (180+t1) + 'deg)' + 
+			'skew(' + (90-angle) +'deg)';
 	}
 	else {
 		this.dom.style.overflow = 'visible';
-		this.dom.style[ Donatello.transform ]= 'rotate(' + t1 + 'deg) skew(0deg)';
+		this.dom.style[ Donatello.transform ] = 
+			// offset rotation by 180deg to conform to svg angle conventions
+			'rotate(' + (180+t1) + 'deg)' +
+			// reset skew
+			'skew(0deg)';
 	}
 
 	// TODO: some of this doesn't belong here
