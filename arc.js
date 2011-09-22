@@ -27,10 +27,10 @@ Donatello.Arc = function( parent, x, y, r, t1, t2, a ) {
 	// the technique
 	// clip.style.border = '1px solid orange';
 
-	var c1 = Donatello.createElement( x-r-s, y-r-s, 2*r, 2*r, 'div');
-	var c2 = Donatello.createElement( x-r-s, y-r-s, 2*r, 2*r, 'div');
-	var c3 = Donatello.createElement( x-r-s, y-r-s, 2*r, 2*r, 'div');
-	var c4 = Donatello.createElement( x-r-s, y-r-s, 2*r, 2*r, 'div');
+	var c1 = Donatello.createElement( r-s, r-s, 2*r, 2*r, 'div');
+	var c2 = Donatello.createElement( r-s, r-s, 2*r, 2*r, 'div');
+	var c3 = Donatello.createElement( r-s, r-s, 2*r, 2*r, 'div');
+	var c4 = Donatello.createElement( r-s, r-s, 2*r, 2*r, 'div');
 	clip.appendChild( c1 );
 	clip.appendChild( c2 );
 	clip.appendChild( c3 );
