@@ -12,7 +12,7 @@ using Raphael.js in my Node Knockout team project.
 Raphael aims to provide a familiar drawing API similar to Raphael and other drawing
 libraries. Since all rendering is done using HTML and CSS, and a lot
 of effort is going toward optimizing CSS using graphics acceleration
-in the major browsers, there is the opportunity to make a very efficient
+in the major browsers, there is the opportunity to do very efficient
 and performant drawing in the browser using this technique. In future
 versions I hope to be able to leverage CSS animations and transitions 
 for efficient hardware-accelerated animations.
