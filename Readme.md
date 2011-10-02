@@ -87,6 +87,12 @@ looks like this:
 
 ![Clock image](https://github.com/dnewcome/Donatello/raw/master/samples/clock.png)
 
+As a test of the Donatello arc shape, there is a version of the arc clock from the Raphael.js
+demos. Most browsers show some display artifacts (thin lines or lumps along the arc sections)
+but hopefully the technique for drawing arcs can be refined.
+
+![Arc clock image](https://github.com/dnewcome/Donatello/raw/master/samples/arc-clock.png)
+
 Keep in mind that everything seen in the clock rendering is a simple DOM element. No canvas
 or SVG is being used at all.
 
@@ -132,7 +138,7 @@ want to be too dogmatic. I'm still thinking about making the interface more CSS-
 - grouping, clipping
 - Bezier curves
 - bounding box, click/touch area calculations
-- arcs, paths
+- paths
 
 # License
 
