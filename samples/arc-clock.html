@@ -51,7 +51,7 @@
 					'stroke-style': 'solid'
 				});
 			}
-			hrArc = paper.arc( 250, 250, 100, 0, 180, {'stroke':colors[1], 'stroke-width': 30} );
+			hrArc = paper.arc( 250, 250, 100, 0, 0, {'stroke':colors[1], 'stroke-width': 30} );
 			minArc = paper.arc( 250, 250, 140, 0, 270, {'stroke':colors[3], 'stroke-width': 30} );
 			secArc = paper.arc( 250, 250, 180, 0, 300, {'stroke':colors[5], 'stroke-width': 30} );
 			drawHands();
@@ -61,8 +61,8 @@
 		function drawHands() {
 			var sec = new Date().getSeconds();
 			var min = new Date().getMinutes();
-			var hrs = new Date().getHours();
-			hrArc.draw( hrs*360/12 );	
+			var hrs = new Date().getHours()%12;
+			hrArc.draw( hrs*(360/12) );	
 			minArc.draw( min*360/60 );	
 			secArc.draw( sec*360/60 );	
 		}
