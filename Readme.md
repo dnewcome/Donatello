@@ -1,14 +1,21 @@
 # About
 
-Donatello is a pure-CSS drawing library for the browser.
-
-The idea is that since everything is just DOM+CSS, things like event handlers and drag/drop 
-should work without any special techniques. 
+Donatello is a pure-CSS drawing library for the browser. The API
+is inspired in part by Raphael.js. All graphical elements are rendered 
+using HTML DOM and CSS. The idea came together from various code snippets
+I had lying around for drawing circles and lines in other projects. I 
+decided to make an attepmpt at a drawing API using these ideas after 
+using Raphael.js in my Node Knockout team project.
 
 ### Goals
 
-Provide a familiar drawing API similar to Raphael and other drawing
-libraries.
+Raphael aims to provide a familiar drawing API similar to Raphael and other drawing
+libraries. Since all rendering is done using HTML and CSS, and a lot
+of effort is going toward optimizing CSS using graphics acceleration
+in the major browsers, there is the opportunity to make a very efficient
+and performant drawing in the browser using this technique. In future
+versions I hope to be able to leverage CSS animations and transitions 
+for efficient hardware-accelerated animations.
 
 ### Non-goals
 
@@ -17,6 +24,12 @@ common JS libraries, particularly drag and drop and animation
 faculties.
 
 # Usage
+
+The Donatello drawing surface is called a 'paper'. The only difference between a 
+paper and any other drawing primitive is that the paper has no visible attributes.
+However, since the paper is a DOM element and also a first-class Donatello object,
+it is fully stylable if desired (e.g. putting a border around the drawing area or 
+selecting a background color).
 
 Converting a DOM element into a drawing surface for is done like this:
 
@@ -30,8 +43,13 @@ at the center of the surface like this:
         'stroke': '#FFFFFF'
 	});
 
-The general form of the API is to pass the x/y coordinates and size along with an object
-containing attributes for stroke and fill.
+The general form of the API is to pass the x/y coordinates and size along with an optional 
+object containing attributes for stroke and fill. Attributes may be added or changed at
+any time using the attr() method. For example, the ellipse in the previous example could
+have been created, omitting the optional style attributes and styled using something like 
+the following:
+
+    ellipse.attr( { 'stroke-width': 4, 'stroke': '#FFFFFF' } );
 
 A more complex example would be to arrange a series of ellipses in a geometric pattern:
 
@@ -117,28 +135,34 @@ attach a click handler like so:
 
 # Limitations
 
-Donatello is intended to show what can be done natively using only CSS, and there are many inconsistencies that I'm 
-still working out and/or don't know about.
-
 Stroke widths currently cause the overall shape to
 increase in size outwardly, rather than splitting the difference in line width like most SVG drawing tools. This could
 lead to some surprising results if one were to directly port code from another library to Donatello.
+
+Animations are not directly supported yet. jQuery animations will work on the underlying DOM elements but
+may have unpredictable results if trying to animate values that require the drawing primitive to be
+redrawn. Animation may be done directly by changing attributes via attr() however.
 
 # Status
 
 Donatello is super-experimental, designed to see how far CSS could be stretched to provide
 general-purpose drawing functions in the browser. The API is in flux and capabilities may be added or 
-removed. I don't want to duplicate what can be done by other libraries like jQuery 
-or using native browser functionality. The API should eventually be very similar to SVG or Raphael.js, but I also don't
-want to be too dogmatic. I'm still thinking about making the interface more CSS-like instead of SVG-like.
+removed. The API should eventually be very similar to SVG or Raphael.js, but I also don't
+want to be too dogmatic about maintaining compatibility. Currently there are extensions in
+rcompat.js that show how a compatibility layer might be created to allow Donatello to function
+as a drop-in replacement for Raphael.js. 
+I'm still thinking about making the interface more CSS-like instead of SVG-like. Comments are
+welcome as to how to approach attribute naming (e.g. 'stroke', 'stroke-width', etc.).
 
 # Future work
 
-- Regular polygon
+- regular polygons
 - grouping, clipping
-- Bezier curves
+- bezier curves
 - bounding box, click/touch area calculations
 - paths
+- gradients
+- better jQuery support for animating calculated attributes
 
 # License
 
