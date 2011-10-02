@@ -80,6 +80,9 @@ Donatello.Line.prototype.draw = function( a ) {
 	// requires another full application of all attributes, I'm just
 	// calling it here.
 	this.dom.style['borderTopWidth' ] = stroke + 'px'; 
+
+	this.dom.style.left = x + 'px'; 
+	this.dom.style.top = y + 'px'; 
 };
 
 /**
