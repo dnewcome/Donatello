@@ -32,6 +32,9 @@ Donatello.prototype.ellipse = function( x, y, rx, ry, a ) {
 Donatello.Ellipse.prototype.draw = function() {
 	// TODO: some of this doesn't belong here
 	// we don't have to recalculate when color changes
+	var x = this.properties.x;
+	var y = this.properties.y;
+
 	var r = this.properties.r;
 	var rx = this.properties.rx;
 	var ry = this.properties.ry;
@@ -47,4 +50,7 @@ Donatello.Ellipse.prototype.draw = function() {
 	el.style.borderStyle = style;
 	el.style.borderColor = c;
 	el.style.backgroundColor = f;
+
+	el.style.left = x-rx-s + 'px';
+	el.style.top = y-ry-s + 'px';
 }
