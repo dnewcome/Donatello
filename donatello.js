@@ -20,10 +20,6 @@ function Donatello( id, x, y, w, h ) {
 	// properties that require a redraw 
 	this.properties = {};
 
-	// properties that can be set any time 
-	// without redrawing.
-	this.cosmeticProperties = {};
-
 	if( typeof id == 'string' ) {
 		var el = document.getElementById( id );
 		Donatello.createElement( x, y, w, h, el );
@@ -189,10 +185,9 @@ Donatello.createLinearGradient = function( deg, color1, color2 ) {
  */
 
 Donatello.prototype.rotate = function( deg ) {
-	// note that we add the rotation to the existing transform. 
-	// not sure if this will cause problems at any point - we may 
-	// need some more sophisticated managment of the list of applied
-	// transforms later on down the road.
+	// note that we add the rotation direction to the existing transform. 
+	// TODO: we need to keep an array of transforms instead of just 
+	// concatenating here
 	this.dom.style[ Donatello.getTransform() ] += 'rotate(' + deg + 'deg)';
 }
 
@@ -209,16 +204,6 @@ Donatello.prototype['delete'] = function() {
 Donatello.prototype.node = function() {
 	return this.dom;
 }
-
-/**
-* Get a list of all of the attributes
-* according to attribute map
-*/
-/*
-Donatello.prototype.attrs = function() {
-	return this.properties;
-}
-*/
 
 /**
 * Setting attributes looks for mapped attributes first, then
@@ -304,31 +289,6 @@ Donatello.prototype.attr = function( obj ) {
 * Drawing methods
 */
 
-
-/**
-*  Draw a rectangular region to the scene.
-*/
-Donatello.prototype.rect = function( x, y, w, h, a ) {
-	return this.pgram( x, y, w, h, null, a );
-}
-
-/**
- * generalized parallelogram, used by rect.
- */
-Donatello.prototype.pgram = function( x, y, dx, dy, skew, a ) {
-	a = Donatello.attrDefaults( a );
-	var el = Donatello.createElement( x, y, dx, dy, 'div');
-
-	el.style.borderWidth = a['stroke-width'] + 'px';
-
-	if( skew != null ) {
-		el.style[ Donatello.getTransform() ] += 'skew(' + skew + 'deg)';
-	}
-	this.dom.appendChild( el );
-	var don = new Donatello( el );
-	don.attr( a );
-	return don;
-}
 
 /**
 * Draw text to the scene using a <div> tag.
