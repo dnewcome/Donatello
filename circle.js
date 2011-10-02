@@ -32,6 +32,8 @@ Donatello.prototype.circle = function( x, y, r, a ) {
 Donatello.Circle.prototype.draw = function() {
 	// TODO: some of this doesn't belong here
 	// we don't have to recalculate when color changes
+	var x = this.properties.x;
+	var y = this.properties.y;
 	var r = this.properties.r;
 	var s = this.properties['stroke-width'];
 	var c = this.properties.stroke;
@@ -43,6 +45,9 @@ Donatello.Circle.prototype.draw = function() {
 	el.style.borderWidth = s  + 'px';
 
 	el.style.borderStyle = style;
-	el.style.borderColor = c;
+	el.style.bordercolor = c;
 	el.style.backgroundColor = f;
+
+	el.style.left = x-r-s + 'px';
+	el.style.top = y-r-s + 'px';
 }
