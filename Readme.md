@@ -9,7 +9,7 @@ using Raphael.js in my Node Knockout team project.
 
 ### Goals
 
-Raphael aims to provide a familiar drawing API similar to Raphael and other drawing
+Donatello aims to provide a familiar drawing API similar to Raphael and other drawing
 libraries. Since all rendering is done using HTML and CSS, and a lot
 of effort is going toward optimizing CSS using graphics acceleration
 in the major browsers, there is the opportunity to do very efficient
@@ -31,7 +31,7 @@ However, since the paper is a DOM element and also a first-class Donatello objec
 it is fully stylable if desired (e.g. putting a border around the drawing area or 
 selecting a background color).
 
-Converting a DOM element into a drawing surface for is done like this:
+Converting a DOM element into a drawing surface for Donatello is done like this:
 
     var paper = Donatello.paper('paper-div', 20, 20, 500, 500 );
 
