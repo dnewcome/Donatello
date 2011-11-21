@@ -7,31 +7,33 @@
 	<script>
 		var offset = 0;
 		function draw() {
-			var paper = Donatello.paper('paper-div', 20, 20, 500, 500 );
+			document.getElementById('paper-div').innerHTML = "";
+			var paper = Donatello.paper('paper-div', 20, 20, 800, 500 );
 			paper.attr( {fill:'black'} );
-			main( paper );
+			main( paper, 200, 250 );
+			main( paper, 600, 250 );
+			offset += 5;
 		}
 		function main( paper, centerx, centery ) {
 			
 			var offsetRad = offset*Math.PI/180;
-			document.getElementById('paper-div').innerHTML = "";
 			var colors = [ 
 				'#717171', '#A71717', '#8AA717', '#34A717', '#17A751', '#17A7A7', '#1751A7', '#3417A7' 
 			];
-			paper.circle( 250, 250, 125, { 
+			paper.circle( centerx, centery, 125, { 
 				stroke:'gray', 
 				'stroke-width': 1, 
 				// 'fill': '#c1c1c1',
 				'backgroundImage': Donatello.createLinearGradient( 90, '#000000', '#FFFFFF' ),
 			} );
 
-			paper.circle( 250, 250, 120, { stroke:'#9f9f9f', 'stroke-width': 1, 'fill': '#c1c1c1' } );
-			paper.circle( 250, 250, 100, { stroke:'white', 'stroke-width': 1, 'fill': 'grey' } );
+			paper.circle( centerx, centery, 120, { stroke:'#9f9f9f', 'stroke-width': 1, 'fill': '#c1c1c1' } );
+			paper.circle( centerx, centery, 100, { stroke:'white', 'stroke-width': 1, 'fill': 'grey' } );
 			var r = 110;
 			for( var i=0; i < 16; i ++ ) {
 				var x = Math.cos( i*Math.PI/8+offsetRad )*r;
 				var y = Math.sin( i*Math.PI/8+offsetRad )*r;
-				var circle = paper.ellipse( 250 + x, 250 + y, 9, 7, { 
+				var circle = paper.ellipse( centerx + x, centery + y, 9, 7, { 
 					'stroke-width': 0,
 					'stroke': 'grey',
 					'stroke-style': 'solid',
@@ -39,7 +41,6 @@
 				});
 				// circle.rotate( (i*Math.PI/4)*180/Math.PI );
 				circle.rotate( (i*Math.PI/8+offsetRad)*180/Math.PI+90 );
-				offset += 0.4;
 			}
 		}
 	</script>
