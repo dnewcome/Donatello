@@ -5,12 +5,19 @@
 	<script src="../circle.js" type="text/javascript"></script>
 	<script src="../ellipse.js" type="text/javascript"></script>
 	<script>
-		function main() {
+		var offset = 0;
+		function draw() {
+			var paper = Donatello.paper('paper-div', 20, 20, 500, 500 );
+			paper.attr( {fill:'black'} );
+			main( paper );
+		}
+		function main( paper, centerx, centery ) {
+			
+			var offsetRad = offset*Math.PI/180;
+			document.getElementById('paper-div').innerHTML = "";
 			var colors = [ 
 				'#717171', '#A71717', '#8AA717', '#34A717', '#17A751', '#17A7A7', '#1751A7', '#3417A7' 
 			];
-			var paper = Donatello.paper('paper-div', 20, 20, 500, 500 );
-			paper.attr( {fill:'black'} );
 			paper.circle( 250, 250, 125, { 
 				stroke:'gray', 
 				'stroke-width': 1, 
@@ -22,16 +29,17 @@
 			paper.circle( 250, 250, 100, { stroke:'white', 'stroke-width': 1, 'fill': 'grey' } );
 			var r = 110;
 			for( var i=0; i < 16; i ++ ) {
-				var x = Math.cos( i*Math.PI/8 )*r;
-				var y = Math.sin( i*Math.PI/8 )*r;
+				var x = Math.cos( i*Math.PI/8+offsetRad )*r;
+				var y = Math.sin( i*Math.PI/8+offsetRad )*r;
 				var circle = paper.ellipse( 250 + x, 250 + y, 9, 7, { 
 					'stroke-width': 0,
 					'stroke': 'grey',
 					'stroke-style': 'solid',
-					'backgroundImage': Donatello.createLinearGradient( i*Math.PI/8*180/Math.PI, '#000000', '#FFFFFF' ),
+					'backgroundImage': Donatello.createLinearGradient( (i*Math.PI/8+offsetRad)*180/Math.PI, '#000000', '#FFFFFF' ),
 				});
 				// circle.rotate( (i*Math.PI/4)*180/Math.PI );
-				circle.rotate( (i*Math.PI/8)*180/Math.PI+90 );
+				circle.rotate( (i*Math.PI/8+offsetRad)*180/Math.PI+90 );
+				offset += 0.4;
 			}
 		}
 	</script>
@@ -42,7 +50,7 @@
 	</style>
 
 </head>
-<body onload='main();'>
+<body onload='setInterval( draw, 40 ) ;'>
 	<div id="paper-div">
 	</div>
 </body>
