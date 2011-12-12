@@ -15,7 +15,7 @@ Donatello.Pgram = function( parent, x, y, dx, dy, skew, a ) {
 	var style = a['stroke-style'];
 
 	this.properties = { 
-		x: x, y: y, dx: dy, skew: skew, 
+		x: x, y: y, w: dx, h: dy, skew: skew, 
 		'stroke-width': s, 
 		'stroke-style': style, 
 		'stroke': c, 
@@ -38,6 +38,12 @@ Donatello.Pgram.prototype.draw = function() {
 	if( skew != null ) {
 		el.style[ Donatello.getTransform() ] += 'skew(' + skew + 'deg)';
 	}
+
+	el.style.top = this.properties.y + 'px';
+	el.style.left = this.properties.x + 'px';
+
+	el.style.width = this.properties.w + 'px';
+	el.style.height = this.properties.h + 'px';
 }
 
 Donatello.prototype.pgram = function( x, y, dx, dy, skew, a ) {
