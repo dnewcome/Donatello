@@ -213,7 +213,7 @@ Donatello.prototype.node = function() {
 * TODO: this could be lots simpler. 
 */
 Donatello.prototype.attr = function( obj ) {
-	if( obj == 'undefined' ) return this.properties;
+	if( obj == undefined ) return this.properties;
 
 	Donatello.merge( obj, this.properties );
 	var mapping = this.attrMap;
