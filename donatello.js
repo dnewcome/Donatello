@@ -317,7 +317,8 @@ Donatello.createElement = function( x, y, w, h, name ) {
 */
 Donatello.attrDefaults = function( a ) {
 	a = a || {};
-	if( !a['stroke-width'] ) a['stroke-width'] = 1;
+	// have to strictly check for undefined to avoid case where width = 0
+	if( a['stroke-width'] === undefined ) a['stroke-width'] = 1;
 	if( !a['stroke'] ) a['stroke'] = 'black';
 	if( !a['fill'] ) a['fill'] = 'transparent';
 	if( !a['stroke-style'] ) a['stroke-style'] = 'solid';
