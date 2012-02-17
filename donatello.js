@@ -20,6 +20,27 @@ function Donatello( id, x, y, w, h ) {
 	// properties that require a redraw 
 	this.properties = {};
 
+	/** 
+	* Translation between drawing terminology and CSS property 
+	* names.
+	*
+	* attr map must be created new for each instance. 
+	* later we can optimize, one per shape type, but 
+	* this was the source of a bug where one map was shared
+	* between all donatello shapes, which aren't compatible.
+	*/
+	this.attrMap = {
+		fill: 'backgroundColor',
+		stroke: 'borderColor',
+		'stroke-style': 'borderStyle',
+		'r': 'borderRadius',
+		// type and children are not applied as styles
+		// so we ignore them by setting to null
+		'type': null,
+		'children': null,
+		'transform': Donatello.getTransform()
+	}
+
 	if( typeof id == 'string' ) {
 		var el = document.getElementById( id );
 		Donatello.createElement( x, y, w, h, el );
@@ -78,23 +99,6 @@ Donatello.merge = function( src, dst ) {
 	}
 	return dst;
 };
-
-/** 
-* Translation between drawing terminology and CSS property 
-* names.
-*/
-Donatello.prototype.attrMap = {
-	fill: 'backgroundColor',
-	stroke: 'borderColor',
-	'stroke-style': 'borderStyle',
-	'r': 'borderRadius',
-	// type and children are not applied as styles
-	// so we ignore them by setting to null
-	'type': null,
-	'children': null,
-	'transform': Donatello.getTransform()
-}
-
 
 /**
 * Each type of donatello shape needs to impelement draw
