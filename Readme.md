@@ -167,3 +167,52 @@ welcome as to how to approach attribute naming (e.g. 'stroke', 'stroke-width', e
 # License
 
 Copyright 2011, Dan Newcome. Provided under the MIT license. See the file LICENSE for details.
+
+# Adding new shapes
+
+	/**
+	* The constructor is responsible for setting defaults
+	*	setting attributes and calling draw().
+	*/
+	Donatello.Shape = function( parent, x, y, w, h, a ) {
+
+		a = Donatello.attrDefaults( a );
+
+		// properties collection is essential for tracking
+		// attributes outside of CSS values.
+		this.properties = { 
+			x: x, y: y, dx: dx, dy: dy,
+			'stroke-width': w
+		};
+
+		var el = Donatello.createElement( x, y, w, h, 'div' );
+
+		// use attribute map modifications to write attributes
+		this.attrMap['stroke-width'] = 'borderTopWidth';
+
+		this.dom = el;
+		this.draw( a );
+		parent.dom.appendChild( el );
+		this.attr( a );
+
+	};
+
+	Donatello.Shape.prototype = new Donatello( null );
+
+	/**
+	* Every shape has a draw function. Any attribute
+	*	change that requires a recalculation should be 
+	*	handled here.
+	*/
+	Donatello.Shape.prototype.draw = function( a ) {
+	};
+
+	/**
+	* Draw a shape.
+	*
+	* This is the convenience function used to automatically
+	*	attach the new shape to its parent.
+	*/
+	Donatello.prototype.shape = function( x, y, dx, dy, a ) {
+		return new Donatello.Shape( this, x, y, dx, dy, a );
+	}
