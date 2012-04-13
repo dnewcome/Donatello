@@ -24,6 +24,7 @@ Donatello.Text = function( parent, x, y, str, a ) {
 
     this.dom = el;
     this.draw();
+	this._parent = parent;
     parent.dom.appendChild( el );
     this.attr( a );
 

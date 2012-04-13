@@ -19,6 +19,7 @@ Donatello.Ellipse = function( parent, x, y, rx, ry, a ) {
 	};
 	var el = Donatello.createElement( x-rx-s, y-ry-s, 2*rx, 2*ry, 'div');
 	parent.dom.appendChild( el );
+	this._parent = parent;
 	this.dom = el;
 	// attr calls draw ...
 	this.attr( a );

@@ -41,6 +41,7 @@ Donatello.Arc = function( parent, x, y, r, t1, t2, a ) {
 	clip.style[ Donatello.transform + 'Origin' ]= '100% 100%';
 
 	parent.dom.appendChild( clip );
+	this._parent = parent;
 	this.dom = clip;
 	// attr calls draw ...
 	// this.attr( a );

@@ -19,6 +19,7 @@ Donatello.Circle = function( parent, x, y, r, a ) {
 	};
 	var el = Donatello.createElement( x-r-s, y-r-s, 2*r, 2*r, 'div');
 	parent.dom.appendChild( el );
+	this._parent = parent;
 	this.dom = el;
 	// attr calls draw ...
 	this.attr( a );

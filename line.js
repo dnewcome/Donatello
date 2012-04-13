@@ -26,6 +26,7 @@ Donatello.Line = function( parent, x, y, dx, dy, a ) {
 	this.attrMap['stroke'] = 'borderTopColor';
 
 	this.dom = el;
+	this._parent = parent;
 	this.draw( a );
 
 
