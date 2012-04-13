@@ -209,6 +209,10 @@ Donatello.prototype.node = function() {
 	return this.dom;
 }
 
+Donatello.prototype.parent = function() {
+	return this._parent;
+}
+
 /**
 * Setting attributes looks for mapped attributes first, then
 * passes attribute through as a CSS attribute.

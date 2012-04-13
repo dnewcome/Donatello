@@ -22,6 +22,7 @@ Donatello.Pgram = function( parent, x, y, dx, dy, skew, a ) {
 		'fill': f
 	};
 	parent.dom.appendChild( el );
+	this._parent = parent;
 	this.dom = el;
 	this.attr( a );
 }
@@ -36,6 +37,7 @@ Donatello.Pgram.prototype.draw = function() {
 	el.style.borderWidth = this.properties['stroke-width'] + 'px';
 
 	if( skew != null ) {
+		console.log( 'setting skew ' + skew );
 		el.style[ Donatello.getTransform() ] += 'skew(' + skew + 'deg)';
 	}
 
