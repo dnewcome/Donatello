@@ -147,14 +147,3 @@ Donatello.prototype.stop = function( time, attrs ) {
 }
 
 
-/**
-* Draw an image to the scene using an <img> tag.
-*/
-Donatello.prototype.image = function( x, y, w, h, img, a ) {
-	var el = Donatello.createElement( x, y, w, h, 'img');
-	el.src = img;
-	this.dom.appendChild( el );
-	var don = new Donatello( el );
-	don.attr( a );
-	return don;
-}
