@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+	<script src="../donatello.js" type="text/javascript"></script>
+	<script src="../text.js" type="text/javascript"></script>
+ 	<script>
+		var circle;
+		function main() {
+			var paper = Donatello.paper('paper-div', 20, 20, 600, 600 );
+
+			text = paper.text( 25, 25, "foo" );
+		}
+	</script>
+	<style>
+		#paper-div {
+			border: 1px solid black
+		}
+	</style>
+
+</head>
+<body onload='main();'>
+	<div id="paper-div">
+	</div>
+</body>
+</html>
