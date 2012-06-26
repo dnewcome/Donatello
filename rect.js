@@ -40,12 +40,20 @@ Donatello.Pgram.prototype.draw = function() {
 		console.log( 'setting skew ' + skew );
 		el.style[ Donatello.getTransform() ] += 'skew(' + skew + 'deg)';
 	}
-
-	el.style.top = this.properties.y + 'px';
-	el.style.left = this.properties.x + 'px';
-
-	el.style.width = this.properties.w + 'px';
-	el.style.height = this.properties.h + 'px';
+	
+	if( Donatello.CORRECT_FOR_STROKE ) {
+		var strokeWidth = this.properties['stroke-width'];
+		el.style.top = this.properties.y - strokeWidth/2 + 'px';
+		el.style.left = this.properties.x - strokeWidth/2 + 'px';
+		el.style.width = this.properties.w - strokeWidth + 'px';
+		el.style.height = this.properties.h - strokeWidth + 'px';
+	}	
+	else {
+		el.style.top = this.properties.y + 'px';
+		el.style.left = this.properties.x + 'px';
+		el.style.width = this.properties.w + 'px';
+		el.style.height = this.properties.h + 'px';
+	}
 }
 
 Donatello.prototype.pgram = function( x, y, dx, dy, skew, a ) {

@@ -20,6 +20,7 @@ function Donatello( id, x, y, w, h ) {
 	// properties that require a redraw 
 	this.properties = {};
 
+
 	/** 
 	* Translation between drawing terminology and CSS property 
 	* names.
@@ -50,6 +51,13 @@ function Donatello( id, x, y, w, h ) {
 		this.dom = id;
 	}
 }
+
+/** 
+* some configuration flags. generally these
+* should go away as things mature and we figure out
+* the Right Thing
+*/
+Donatello.CORRECT_FOR_STROKE = true;
 
 /**
  * Detect css transform attribute for browser compatibility.
