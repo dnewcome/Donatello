@@ -33,10 +33,11 @@ Donatello.prototype.circle = function( x, y, r, a ) {
 Donatello.Circle.prototype.draw = function() {
 	// TODO: some of this doesn't belong here
 	// we don't have to recalculate when color changes
+	var s = this.properties['stroke-width'];
+
 	var x = this.properties.x;
 	var y = this.properties.y;
 	var r = this.properties.r;
-	var s = this.properties['stroke-width'];
 	var c = this.properties.stroke;
 	var f = this.properties.fill;
 	var style = this.properties['stroke-style'];
@@ -48,7 +49,15 @@ Donatello.Circle.prototype.draw = function() {
 	el.style.borderStyle = style;
 	el.style.bordercolor = c;
 	el.style.backgroundColor = f;
-
-	el.style.left = x-r-s + 'px';
-	el.style.top = y-r-s + 'px';
+	
+	if( Donatello.CORRECT_FOR_STROKE ) {
+		el.style.left = x-r-s/2 + 'px';
+		el.style.top = y-r-s/2 + 'px';
+		el.style.width = 2*r - s + 'px';
+		el.style.height = 2*r - s + 'px';
+	}
+	else {
+		el.style.left = x-r-s + 'px';
+		el.style.top = y-r-s + 'px';
+	}
 }

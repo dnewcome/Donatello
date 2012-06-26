@@ -2,6 +2,7 @@
 <html>
 <head>
 	<script src="../donatello.js" type="text/javascript"></script>
+	<script src="../rect.js" type="text/javascript"></script>
 	<script src="../circle.js" type="text/javascript"></script>
 	<!--
 	<script src="../build/donatello-min.js" type="text/javascript"></script>
@@ -29,7 +30,9 @@
 
 			// test setting attribute  
 			circle = paper.circle( 225, 25, 20 );
-			circle.attr( { 'stroke-width':6 } );
+			circle.attr( { 'stroke-width':16, stroke:'red' } );
+			circle = paper.circle( 225, 25, 20 );
+
 		}
 	</script>
 	<style>
