@@ -30,6 +30,8 @@ Donatello.Text.prototype = new Donatello( null );
 */
 Donatello.Text.prototype.draw = function() {
 	this.dom.innerHTML = this.properties['str'];
+	this.dom.style.top = this.properties['y'] + 'px';
+	this.dom.style.left = this.properties['x'] + 'px';
 };
 
 /**
