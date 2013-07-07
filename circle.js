@@ -50,6 +50,9 @@ Donatello.Circle.prototype.draw = function() {
 	el.style.bordercolor = c;
 	el.style.backgroundColor = f;
 	
+	// todo: if stroke encroaches on center,
+	// circle will drift. this can be puzzling behavior 
+	// may want to check for it and do something nicer
 	if( Donatello.CORRECT_FOR_STROKE ) {
 		el.style.left = x-r-s/2 + 'px';
 		el.style.top = y-r-s/2 + 'px';

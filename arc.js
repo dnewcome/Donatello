@@ -27,10 +27,11 @@ Donatello.Arc = function( parent, x, y, r, t1, t2, a ) {
 	// the technique
 	// clip.style.border = '1px solid orange';
 
-	var c1 = Donatello.createElement( r-s, r-s, 2*r, 2*r, 'div');
-	var c2 = Donatello.createElement( r-s, r-s, 2*r, 2*r, 'div');
-	var c3 = Donatello.createElement( r-s, r-s, 2*r, 2*r, 'div');
-	var c4 = Donatello.createElement( r-s, r-s, 2*r, 2*r, 'div');
+	// todo: need to move calculations to draw so attr() works correctly
+	var c1 = Donatello.createElement( r-s/2, r-s/2, 2*r-s, 2*r-s, 'div');
+	var c2 = Donatello.createElement( r-s/2, r-s/2, 2*r-s, 2*r-s, 'div');
+	var c3 = Donatello.createElement( r-s/2, r-s/2, 2*r-s, 2*r-s, 'div');
+	var c4 = Donatello.createElement( r-s/2, r-s/2, 2*r-s, 2*r-s, 'div');
 	clip.appendChild( c1 );
 	clip.appendChild( c2 );
 	clip.appendChild( c3 );
@@ -75,6 +76,8 @@ Donatello.Arc.prototype.draw = function( t2 ) {
 
 	// TODO: some of this doesn't belong here
 	// we don't have to recalculate when color changes
+	var x = this.properties.x;
+	var y = this.properties.y;
 	var r = this.properties.r;
 	var s = this.properties['stroke-width'];
 	var c = this.properties.stroke;
@@ -84,6 +87,22 @@ Donatello.Arc.prototype.draw = function( t2 ) {
 	function setprops( el, ang ) {
 		el.style.borderRadius = r + s + 'px';
 		el.style.borderWidth = s  + 'px';
+
+/*
+		if( Donatello.CORRECT_FOR_STROKE ) {
+			el.style.left = x-r-s/2 + 'px';
+			console.log( 'arc left: ' + el.style.left );
+			el.style.top = y-r-s/2 + 'px';
+			el.style.width = 2*r - s + 'px';
+			el.style.height = 2*r - s + 'px';
+		}
+		else {
+			el.style.left = x-r-s + 'px';
+			el.style.top = y-r-s + 'px';
+		}
+*/
+
+
 
 		el.style.borderStyle = style;
 		el.style.borderColor = c;
