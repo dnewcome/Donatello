@@ -13,14 +13,35 @@
 		var rect;
 		function onmd( el ) {
 			corner = el;
-			document.body.addEventListener( 'mousemove', onmm );
+			switch( el.tag ) {
+				case 'handle1':
+					document.body.addEventListener( 'mousemove', onmm1 );
+					break;
+				case 'handle2':
+					document.body.addEventListener( 'mousemove', onmm2 );
+					break;
+				case 'handle3':
+					document.body.addEventListener( 'mousemove', onmm3 );
+					break;
+				case 'handle4':
+					document.body.addEventListener( 'mousemove', onmm4 );
+					break;
+				case 'handle5':
+					document.body.addEventListener( 'mousemove', onmm5 );
+					break;
+			}
 		}
 		function onmu( el ) {
 			corner = null;
-			document.body.removeEventListener( 'mousemove', onmm );
+			document.body.removeEventListener( 'mousemove', onmm1 );
+			document.body.removeEventListener( 'mousemove', onmm2 );
+			document.body.removeEventListener( 'mousemove', onmm3 );
+			document.body.removeEventListener( 'mousemove', onmm4 );
+			document.body.removeEventListener( 'mousemove', onmm5 );
 		}
-		function onmm( evt ) {
-			var attrs = rect.attr().properties;
+		// upper left 
+		function onmm1( evt ) {
+			var attrs = rect.attr();
 			console.log( attrs );
 			var ow = attrs.w; 
 			var oh = attrs.h; 
@@ -35,6 +56,51 @@
 				// h: evt.clientY
 			} );
 			corner.attr( { x: evt.clientX-40, y: evt.clientY-40 } );
+			handle2.attr( { y: evt.clientY-40 } );
+			evt.preventDefault();
+		}
+		// upper right
+		function onmm2( evt ) {
+			var attrs = rect.attr();
+			console.log( attrs );
+			var dx = evt.clientX-(40-10) - (attrs.x+attrs.w); 
+			var dy = evt.clientY-(40-10) - (attrs.y); 
+			console.log( dx, dy);
+			rect.attr( { 
+				w: attrs.w + dx,
+				h: attrs.h - dy,
+				y: evt.clientY-(40-10)
+			} );
+			corner.attr( { x: evt.clientX-40, y: evt.clientY-40 } );
+			handle1.attr( { y: evt.clientY-40 } );
+			evt.preventDefault();
+		}
+		// lower left
+		// need to change w/h/x 
+		function onmm3( evt ) {
+			var attrs = rect.attr();
+			var dx = attrs.x - evt.clientX;
+			var dy = attrs.y+attrs.h - evt.clientY;
+			console.log( dx, dy );
+			rect.attr( { 
+				x: evt.clientX-(40-10),
+				w: attrs.w - dx,
+				h: attrs.h - dy,
+			} );
+			corner.attr( { x: evt.clientX-40, y: evt.clientY-40 } );
+			evt.preventDefault();
+		}
+		function onmm5( evt ) {
+			var attrs = rect.attr();
+			var dx = evt.clientX-(40-10) - (attrs.x+attrs.w/2); 
+			var dy = evt.clientY-(40-10) - (attrs.y-attrs.h/2); 
+			rect.attr( { 
+				x: evt.clientY-(40-10) + dx,
+				y: evt.clientY-(40-10) + dy
+			} );
+			corner.attr( { x: evt.clientX-40, y: evt.clientY-40 } );
+			handle1.attr( { x: evt.clientX-40 - attrs.w/2, y: evt.clientY-40 - attrs.h/2 } );
+			handle2.attr( { x: evt.clientX-40, y: evt.clientY-40 } );
 			evt.preventDefault();
 		}
 		function main() {
@@ -42,17 +108,25 @@
 
 			rect = paper.rect( 20, 20, 200, 150, { 'stroke-width': 2 } ); 
 
-			var handle1 = paper.rect( 10, 10, 20, 20, { 'fill': 'black' } );
+			handle1 = paper.rect( 10, 10, 20, 20, { 'fill': 'black' } );
+			handle1.tag = 'handle1';
 			handle1.node().addEventListener( 'mousedown', function() { onmd( handle1 ); } );
 
-			var handle2 = paper.rect( 210, 10, 20, 20 );
+			handle2 = paper.rect( 210, 10, 20, 20 );
+			handle2.tag = 'handle2';
 			handle2.node().addEventListener( 'mousedown', function() { onmd( handle2 ); } );
 
-			var handle3 = paper.rect( 10, 160, 20, 20 );
+			handle3 = paper.rect( 10, 160, 20, 20 );
+			handle3.tag = 'handle3';
 			handle3.node().addEventListener( 'mousedown', function() { onmd( handle3 ); } );
 
-			var handle4 = paper.rect( 210, 160, 20, 20 );
+			handle4 = paper.rect( 210, 160, 20, 20 );
+			handle4.tag = 'handle4';
 			handle4.node().addEventListener( 'mousedown', function() { onmd( handle4 ); } );
+
+			handle5 = paper.rect( 110, 85, 20, 20 );
+			handle5.tag = 'handle5';
+			handle5.node().addEventListener( 'mousedown', function() { onmd( handle5 ); } );
 
 			document.body.addEventListener( 'mouseup', onmu );
 		}

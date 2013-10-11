@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+	<script src="../donatello.js" type="text/javascript"></script>
+	<script src="../circle.js" type="text/javascript"></script>
+	<script>
+		function main() {
+			var colors = [ 
+				'#717171', '#A71717', '#8AA717', '#34A717', '#17A751', '#17A7A7', '#1751A7', '#3417A7' 
+			];
+			var paper = Donatello.paper('paper-div', 20, 20, 500, 500 );
+			// setting background helps find bugs in shapes accidentally 
+			// setting their parent's attributes
+			paper.attr( {fill:'black'} );
+			var r = 100;
+			for( var i=0; i < 8; i ++ ) {
+				var x = Math.cos( i*Math.PI/4 )*r;
+				var y = Math.sin( i*Math.PI/4 )*r;
+				var circle = paper.circle( 250 + x, 250 + y, 120, { 
+					'stroke-width': 0,
+					'stroke': colors[i%8],
+					'stroke-style': 'transparent',
+					'fill': 'rgba(255,255,255,0.2)',
+					// 'backgroundImage': Donatello.createLinearGradient( i*Math.PI/8*180/Math.PI, colors[i%8], 'rgba(255,255,255,0.1)' )
+					'backgroundImage': Donatello.createLinearGradient( i*Math.PI/8*180/Math.PI, 'black', 'rgba(255,255,255,0.1)' )
+
+				});
+			}
+		}
+	</script>
+	<style>
+		#paper-div {
+			border: 1px solid black
+		}
+	</style>
+
+</head>
+<body onload='main();'>
+	<div id="paper-div">
+	</div>
+</body>
+</html>
