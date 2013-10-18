@@ -49,11 +49,14 @@ Donatello.Triangle.prototype.draw = function() {
 	var f = this.properties.fill;
 	var style = this.properties['stroke-style'];
 
+
 	// stroke
 	this._parent.line(x1, y1, x2-x1, y2-y1, this.properties);	
 	this._parent.line(x2, y2, x3-x2, y3-y2, this.properties);	
 	this._parent.line(x3, y3, x1-x3, y1-y3, this.properties);	
 
 	// fill
+	// order of stroke and fill reversed for dev
 	this._parent.tri( x1, y1, x2, y2, x3, y3, this.properties );
+
 }

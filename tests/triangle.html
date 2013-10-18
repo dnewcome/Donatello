@@ -19,12 +19,14 @@
 		function test_stroke_width_correction( paper ) {
 			var attrs = { 
 				stroke:'red',
-				'stroke-width':1
+				'stroke-width':4
 			};
 
-			paper.triangle( 10, 10, 100, 10, 10, 100, attrs );
+			paper.triangle( 10, 10, 100, 40, 10, 100, attrs );
+			paper.triangle( 100, 10, 200, 40, 120, 130, attrs );
 
-			// paper.triangle( 10, 10, 100, 10, 10, 100 );
+			paper.triangle( 10, 100, 100, 140, 0, 200, attrs );
+			paper.triangle( 110, 100, 200, 80, 100, 200, attrs );
 		}
 	</script>
 	<style>

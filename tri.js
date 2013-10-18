@@ -52,14 +52,15 @@ Donatello.Tri.prototype.draw = function() {
 	var style = this.properties['stroke-style'];
 
 	var el = this.dom;
-	// el.style.transformOrigin = '0 0';
+	el.style.transformOrigin = '0 0';
 	el.style.left = x1 + 'px';
 	el.style.top = y1 + 'px';
 
 	// note: find lengths of all sides, then
 	// use heron's formula to find area, then
-	// find triangle height and use as gradient stop value
-	// second triangle angle for gradient angle.
+	// find height.
+	// todo: we should be able to do this without finding
+	// the area 
 	var dx1 = x1 - x2;
 	var dy1 = y1 - y2;
 	var len1 = Math.sqrt( dx1*dx1 + dy1*dy1 );
@@ -75,23 +76,31 @@ Donatello.Tri.prototype.draw = function() {
 	var sp = ( len1 + len2 + len3 ) / 2;
  	var area = Math.sqrt( sp * (sp-len1) * (sp-len2) * (sp-len3) )
 
-	var height = 2*area/len2
-	console.log(height)
+	var height = 2*area/len1
+	var width = len1
 
-	this.dom.style.width = len1 + 'px';
+	this.dom.style.width = width + 'px';
+	this.dom.style.height = height + 'px';
 
-	this.dom.style.height = '100px';
-
-	// find the angle
-	var rot = Math.asin( Math.abs(y2 - y1) / len1 );
-	// convert to degrees
+	// find the rotation angle for dom container
+	var rot = Math.asin( (y2 - y1) / len1 );
 	rot = rot * (180/Math.PI);
 
+	// correction angle for skew
+	var rot2 = Math.asin( (x3 - x1) / len3 );
+	console.log(x1 + " " + x3 );
+	rot2 = rot2 * (180/Math.PI);
+
+	// gradient rotation angle
+	var grad = -(180/Math.PI)*Math.atan( width/height );
+
+	console.log('rotation: ' + rot);
+	console.log('rotation2: ' + rot2);
+
 	this.dom.style[ Donatello.getTransform() ] = 
-		'rotate(' + rot + 'deg)';
+		'rotate(' + rot + 'deg) skew(' + (rot+rot2) + 'deg)';
 
 	this.dom.style.backgroundImage = 
-			 '-moz-linear-gradient(-45deg, #77EDFF, #00ADFF ' + height + 'px, transparent ' + height + 'px)';
-
-	
+			 // '-moz-linear-gradient(-45deg, #77EDFF, #00ADFF ' + height + 'px, transparent ' + height + 'px)';
+			 '-moz-linear-gradient(' + grad + 'deg, #77EDFF, #00ADFF 50%, transparent 50%)';
 }

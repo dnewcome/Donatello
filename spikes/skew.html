@@ -8,25 +8,45 @@
 				height: 300px;
 				position: relative;
 			}
-			.square {
+			#square {
 				/*
 				-moz-transform-origin: 0% 0%;
 				-moz-transform-origin: 50% 50%;
 				*/
-				-moz-transform: skewy(20deg);
-				border: 0px solid black;
-				background-color: green;
+				-moz-transform: skew(20deg);
+				border: 1px solid black;
+				/* background-color: green; */
 				position: absolute;
 				top: 100px;
 				left: 100px;
-				width: 100px;
+				/* angle is proportional to proportion of width/height
+				width: 140px;
 				height: 100px;
+				45*0.4*.5 + 45 .....
+				background-image: -moz-linear-gradient(-54deg, #77EDFF, #00ADFF 50%, transparent 50%);
+				*/
 			}	
 		</style>
+		<script>
+			function init() {
+				var width = 300;
+				var height = 100;
+				// think right triangle for this angle... 
+				// angle will be the same regardless of skew.
+				// so we can calculate it for a simple rt triangle
+				//var angle = -((0.5*(width/height - 1)*45) + 45);
+				var angle = -(180/Math.PI)*Math.atan(width/height);
+				console.log(angle);
+				document.getElementById("square").style.width = width + "px"; 
+				document.getElementById("square").style.height = height + "px";
+				document.getElementById("square").style.backgroundImage = 
+					"-moz-linear-gradient(" + angle + "deg, #77EDFF, #00ADFF 50%, transparent 50%)"
+			}
+		</script>
 	</head>
-	<body>
+	<body onload="init();">
 		<div class="view">
-			<div class="square">
+			<div id="square">
 			</div>
 		</div>
 	</body>
