@@ -1,0 +1,25 @@
+{
+  "name": "Donatello",
+  "version": "1.0.0",
+  "description": "Donatello is a pure-CSS drawing library for the browser. The API is inspired in part by Raphael.js. All graphical elements are rendered  using HTML DOM and CSS. The idea came together from various code snippets I had lying around for drawing circles and lines in other projects. I  decided to make an attepmpt at a drawing API using these ideas after  using Raphael.js in my Node Knockout team project.",
+  "main": "donatello.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dnewcome/Donatello.git"
+  },
+  "author": "Dan Newcome",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dnewcome/Donatello/issues"
+  },
+  "homepage": "https://github.com/dnewcome/Donatello",
+  "devDependencies": {
+    "dalekjs": "0.0.9"
+  }
+}
